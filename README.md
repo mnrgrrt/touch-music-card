@@ -1,10 +1,14 @@
 # Touch music card
 
+![The card on a Nest Hub, in a light theme](images/music-card-nesthub-light.png)
+
 A Lovelace card that puts Music Assistant behind one screen, built for touch panels and for Google Nest Hub cast dashboards at 1024×600.
 
 It was written for a second-hand Nest Hub on a desk. Speaking to such a panel hands you back to Google and closes the dashboard you were looking at, and it has no keyboard, so a music card there has to be something you can drive entirely with your thumbs. That is what this is: speakers along the top, what is playing on the left, and everything you might want to start on the right.
 
-![The card on a Nest Hub](images/music-card-dark.png)
+The same card in a dark theme:
+
+![The card in a dark theme](images/music-card-dark.png)
 
 ## Does it need Spotify?
 
@@ -54,7 +58,16 @@ Or copy `touch-music-card.js` to `config/www/` yourself and add it under Setting
 
 You need the [Music Assistant](https://www.music-assistant.io/) integration set up with at least one provider and at least one player. Nothing else.
 
-## Minimal configuration
+## Getting started
+
+There is nothing to look up or type in. Edit a dashboard, **Add card**, and pick **Touch music card** from the list.
+
+- **One Music Assistant** — the card finds it by itself and fills it in.
+- **More than one** — choose the right one from the *Music Assistant* dropdown at the top of the editor.
+
+The new card starts with one category, *Recently played*, which Music Assistant fills for you, so there is something to tap straight away. Add your speakers under *Zones* and you are done. Everything else is optional.
+
+If you prefer YAML, the same card looks like this. `config_entry_id` is the value the dropdown writes for you; the one below is only an example.
 
 ```yaml
 type: custom:touch-music-card
@@ -62,11 +75,13 @@ config_entry_id: 01JXXXXXXXXXXXXXXXXXXXXXXX
 zones:
   - name: Kitchen
     entity: media_player.kitchen
+categories:
+  - name: Recently played
+    source:
+      media_type: playlist
+      order_by: last_played_desc
+      limit: 12
 ```
-
-`config_entry_id` is your Music Assistant integration. In the visual editor it is a dropdown, so you never have to look the value up — add the card from the card picker and pick it from the list. The value above is an example; yours is different.
-
-That is enough to get a working card. Everything below is optional.
 
 ## Categories: by hand or filled for you
 
@@ -144,7 +159,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 
 | Key | Default | What it does |
 | --- | --- | --- |
-| `config_entry_id` | — | Required. Your Music Assistant integration. |
+| `config_entry_id` | filled in | Your Music Assistant integration. Filled in for you when there is only one; otherwise picked from the dropdown. |
 | `zones` | — | The speakers along the top. |
 | `categories` | — | Groups of tiles on the right. |
 | `links` | — | Navigation buttons to other dashboard views. |
@@ -215,7 +230,11 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 
 ## Status
 
-This runs on my own Nest Hub every day, and that is the whole promise. I am not maintaining it actively: pull requests are welcome and I will look at them, issues may go unanswered, and you are free to fork it without asking.
+This runs on my own Nest Hub every day. I made it for myself, and I am sharing it because someone else might have the same small screen on their desk.
+
+I would really like to hear what you think of it. Are you using it, and on what? Did you change something, or build something on top of it? Is there an idea that would make it better? Open an [issue](https://github.com/mnrgrrt/touch-music-card/issues) and tell me — good ideas are very welcome, and so is simply telling me it works for you.
+
+Be aware that I do not maintain it actively. I work on it now and then when I have time, so an answer or a fix can take a while. Pull requests are welcome and I will look at them, and you are free to fork it and make it your own without asking.
 
 It is one file with no build step — no npm, no bundler, no TypeScript. Open it in an editor and change what you want. That is deliberate.
 

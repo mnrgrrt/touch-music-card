@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.3.0';
+const VERSIE = '2.3.1';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -656,8 +656,17 @@ class MusicAssistantTouchCard extends HTMLElement {
   // with it. A view can carry its own theme, so the global dark-mode flag is not
   // enough; what counts is what is really behind the card.
   _pasThemaToe() {
-    const kleur = getComputedStyle(this).getPropertyValue('--card-background-color')
-      || getComputedStyle(this).getPropertyValue('--primary-background-color') || '';
+    // Measure the surface the card really paints, not a variable that may disagree with
+    // it: a view theme can set --card-background-color dark while --ha-card-background,
+    // which the surface uses, stays light.
+    const vlak = this.shadowRoot && this.shadowRoot.querySelector('.wrap');
+    const echt = vlak ? getComputedStyle(vlak).backgroundColor : '';
+    const zichtbaar = echt && !/^rgba\([^)]*,\s*0\)$/.test(echt) && echt !== 'transparent';
+    const cs = getComputedStyle(this);
+    const kleur = (zichtbaar ? echt : '')
+      || cs.getPropertyValue('--ha-card-background')
+      || cs.getPropertyValue('--card-background-color')
+      || cs.getPropertyValue('--primary-background-color') || '';
     if (kleur === this._themaKleur) return;
     this._themaKleur = kleur;
     let r, g, b;
