@@ -1,0 +1,11 @@
+# Windows / OneDrive leftovers
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# macOS
+.DS_Store
+
+# editors
+.vscode/
+*.swp
