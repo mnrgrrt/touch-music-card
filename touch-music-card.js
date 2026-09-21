@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.0';
+const VERSIE = '2.4.1';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -1346,9 +1346,12 @@ class MusicAssistantTouchCard extends HTMLElement {
     }
     const tiles = lijst.map((t, i) => {
       const b = this._tegelBeeld(t);
+      const ic = `<div class="ic">${svg(t.icon || (SOORT_VAN(t.uri) === 'radio' ? 'radio' : 'muziek'))}</div>`;
+      // An image that will not load (a site that refuses hotlinking, a dead
+      // link) falls back to the icon instead of leaving a broken picture.
       const beeld = b
-        ? `<img loading="lazy" src="${esc(GROOT(b))}">`
-        : `<div class="ic">${svg(t.icon || (SOORT_VAN(t.uri) === 'radio' ? 'radio' : 'muziek'))}</div>`;
+        ? `<img loading="lazy" src="${esc(GROOT(b))}" onerror="this.outerHTML=this.nextElementSibling.innerHTML"><template>${ic}</template>`
+        : ic;
       return `<button class="tile" data-act="tegel" data-i="${i}">${beeld}<span>${esc(t.name)}</span></button>`;
     }).join('');
     return chips + this._scrollbox(`<div class="tiles vlak">${tiles}</div>`);
