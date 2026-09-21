@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.2.4';
+const VERSIE = '2.3.0';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -467,12 +467,36 @@ class MusicAssistantTouchCard extends HTMLElement {
     return document.createElement('touch-music-card-editor');
   }
 
-  static getStubConfig() {
-    return { config_entry_id: '', height: 556, keyboard: true, limit: 24 };
+  // What you get when you add the card from the card picker. The aim is a card
+  // that works the moment it lands, with nothing to fill in: nearly everyone has
+  // exactly one Music Assistant, so the card looks it up and takes that one. The
+  // speakers fill themselves already (every Music Assistant player, when no zones
+  // are set), and one category that Music Assistant fills shows there is music
+  // behind the card from the first second, instead of an empty "no categories".
+  // The lookup needs admin rights, which whoever opens the card picker has.
+  static async getStubConfig(hass) {
+    const stub = {
+      config_entry_id: '',
+      height: 556,
+      keyboard: true,
+      limit: 24,
+      categories: [{
+        name: 'Recently played',
+        source: { media_type: 'playlist', order_by: 'last_played_desc', limit: 12 },
+      }],
+    };
+    try {
+      const lijst = await hass.callWS({ type: 'config_entries/get', domain: 'music_assistant' });
+      const actief = (lijst || []).filter((e) => e.state === 'loaded');
+      if (actief.length === 1) stub.config_entry_id = actief[0].entry_id;
+    } catch (e) { /* no rights or no Music Assistant: the editor dropdown takes over */ }
+    return stub;
   }
 
   setConfig(config) {
-    if (!config.config_entry_id) throw new Error('config_entry_id ontbreekt');
+    if (!config.config_entry_id) {
+      throw new Error('Pick your Music Assistant in the card editor (config_entry_id).');
+    }
     this._cfg = config;
     this._cats = config.categories || [];
     // keyboard: true  -> eigen schermtoetsenbord (Nest Hub, kiosk)
