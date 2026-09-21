@@ -6,7 +6,7 @@ A Lovelace card that puts Music Assistant behind one screen, built for touch pan
 
 It was written for a second-hand Nest Hub on a desk. Speaking to such a panel hands you back to Google and closes the dashboard you were looking at, and it has no keyboard, so a music card there has to be something you can drive entirely with your thumbs. That is what this is: speakers along the top, what is playing on the left, and everything you might want to start on the right.
 
-The same card in a dark theme:
+The opening screen of the card in a dark theme:
 
 ![The card in a dark theme](images/music-card-dark.png)
 
