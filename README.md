@@ -6,6 +6,8 @@ A Lovelace card that puts Music Assistant behind one screen, built for touch pan
 
 It was written for a second-hand Nest Hub on a desk. Speaking to such a panel hands you back to Google and closes the dashboard you were looking at, and it has no keyboard, so a music card there has to be something you can drive entirely with your thumbs. That is what this is: speakers along the top, what is playing on the left, and everything you might want to start on the right.
 
+It has a sibling for cameras: [Touch camera card](https://github.com/mnrgrrt/touch-camera-card) — same screen size, same thumb-first idea, and the two sit side by side as views on one dashboard.
+
 The same card in a dark theme:
 
 ![The card in a dark theme](images/music-card-dark.png)
@@ -232,6 +234,10 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `name` | — | The label. |
 | `icon` | — | An icon beside it. |
 | `path` | — | A dashboard path, for example `/nesthub/home`. |
+
+## Goes well with
+
+**[Touch camera card](https://github.com/mnrgrrt/touch-camera-card)** — your cameras behind tabs of their own, for the same Nest Hub: snapshot tiles that recover by themselves, a large MJPEG view with a watchdog that notices a frozen stream, today's Frigate notifications beside the images, and weather radar tiles. Put both cards on their own view of one cast dashboard and use `links` here to jump between them.
 
 ## Status
 
