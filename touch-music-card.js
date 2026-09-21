@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.3.1';
+const VERSIE = '2.4.0';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -44,11 +44,20 @@ const SPEELT = ['playing', 'paused', 'buffering'];
 // the browser refuses to load those as mixed content and you get an empty
 // square with a console warning per image. An honest empty is better than a
 // broken one, so such a url is treated as absent and the icon takes over.
+// An http image on an https dashboard is blocked as mixed content. For a public
+// site (a radio station's logo, say) the same file is almost always there over
+// https too, so ask for that. An address on your own network - Music Assistant's
+// imageproxy on http://192.168.x.x:8095 - has no https twin, so it is dropped
+// and the tile falls back to its icon.
+const LOKAAL = /^(localhost|\d{1,3}(\.\d{1,3}){3}|\[[0-9a-f:]+\]|[^.]+|.+\.(local|lan|home|internal))$/i;
 const VEILIG = (u) => {
   const s = String(u || '');
   if (!s) return '';
   const https = typeof location !== 'undefined' && location.protocol === 'https:';
-  return (https && s.slice(0, 5).toLowerCase() === 'http:') ? '' : s;
+  if (!https || s.slice(0, 5).toLowerCase() !== 'http:') return s;
+  const m = s.match(/^http:\/\/([^/:?#]+)(:\d+)?/i);
+  if (!m || m[2] || LOKAAL.test(m[1])) return '';
+  return 'https:' + s.slice(5);
 };
 
 // A Music Assistant uri is <provider>://<type>/<id>. The type is the half that
@@ -73,7 +82,7 @@ const SOORTEN = [
 // one block below and translating it.
 const TAAL = {
   en: {
-    soort: { track: 'Tracks', album: 'Albums', artist: 'Artists', playlist: 'Playlists' },
+    soort: { track: 'Tracks', album: 'Albums', artist: 'Artists', playlist: 'Playlists', radio: 'Radio stations' },
     zoeken: 'Search artist, album or track',
     toetsen: 'KEYS', verberg: 'HIDE', zoek: 'SEARCH',
     wissen: 'Clear', spatie: 'space',
@@ -118,7 +127,7 @@ const TAAL = {
     },
   },
   nl: {
-    soort: { track: 'Nummers', album: 'Albums', artist: 'Artiesten', playlist: 'Playlists' },
+    soort: { track: 'Nummers', album: 'Albums', artist: 'Artiesten', playlist: 'Playlists', radio: 'Radiozenders' },
     zoeken: 'Zoek artiest, album of nummer',
     toetsen: 'TOETSEN', verberg: 'VERBERG', zoek: 'ZOEK',
     wissen: 'Wissen', spatie: 'spatie',
@@ -425,7 +434,7 @@ const KORT = {
   prev: 'mdi:skip-previous', next: 'mdi:skip-next', terug: 'mdi:arrow-left',
   hart: 'mdi:heart', muziek: 'mdi:music', klok: 'mdi:history', ster: 'mdi:star',
   plus2: 'mdi:playlist-plus', album: 'mdi:album', artiest: 'mdi:account-music',
-  oneindig: 'mdi:infinity', lijst: 'mdi:playlist-music',
+  oneindig: 'mdi:infinity', lijst: 'mdi:playlist-music', radio: 'mdi:radio',
 };
 
 const svg = (naam) => {
@@ -1339,7 +1348,7 @@ class MusicAssistantTouchCard extends HTMLElement {
       const b = this._tegelBeeld(t);
       const beeld = b
         ? `<img loading="lazy" src="${esc(GROOT(b))}">`
-        : `<div class="ic">${svg(t.icon || 'muziek')}</div>`;
+        : `<div class="ic">${svg(t.icon || (SOORT_VAN(t.uri) === 'radio' ? 'radio' : 'muziek'))}</div>`;
       return `<button class="tile" data-act="tegel" data-i="${i}">${beeld}<span>${esc(t.name)}</span></button>`;
     }).join('');
     return chips + this._scrollbox(`<div class="tiles vlak">${tiles}</div>`);
@@ -1903,6 +1912,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
               { name: 'media_type', selector: { select: { mode: 'dropdown', options: [
                 { value: 'playlist', label: sn.playlist }, { value: 'album', label: sn.album },
                 { value: 'artist', label: sn.artist }, { value: 'track', label: sn.track },
+                { value: 'radio', label: sn.radio },
               ] } } },
               { name: 'count', selector: { number: { min: 1, max: 100, step: 1, mode: 'box' } } },
             ] },

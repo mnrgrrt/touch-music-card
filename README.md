@@ -6,7 +6,7 @@ A Lovelace card that puts Music Assistant behind one screen, built for touch pan
 
 It was written for a second-hand Nest Hub on a desk. Speaking to such a panel hands you back to Google and closes the dashboard you were looking at, and it has no keyboard, so a music card there has to be something you can drive entirely with your thumbs. That is what this is: speakers along the top, what is playing on the left, and everything you might want to start on the right.
 
-The opening screen of the card in a dark theme:
+The same card in a dark theme:
 
 ![The card in a dark theme](images/music-card-dark.png)
 
@@ -108,6 +108,11 @@ categories:
       media_type: album
       order_by: random
       limit: 12
+  - name: Stations
+    source:
+      media_type: radio
+      limit: 50
+      play: true
 ```
 
 The card asks `music_assistant.get_library` and shows what comes back, cover art included. Your steering wheel is Music Assistant itself: mark something as a favourite there and it turns up in a `favorite: true` category on its own.
@@ -203,7 +208,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 
 | Key | Default | What it does |
 | --- | --- | --- |
-| `media_type` | `playlist` | `playlist`, `album`, `artist` or `track`. |
+| `media_type` | `playlist` | `playlist`, `album`, `artist`, `track` or `radio` (your radio stations). |
 | `limit` | `12` | How many tiles. |
 | `order_by` | library order | `last_played_desc`, `timestamp_added_desc` or `random`. |
 | `favorite` | `false` | Only what is marked as a favourite in Music Assistant. |
