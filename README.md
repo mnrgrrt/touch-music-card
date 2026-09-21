@@ -1,6 +1,6 @@
 # Touch music card
 
-![The card on a Nest Hub, in a light theme](images/music-card-nesthub-light.png)
+![The card on a Nest Hub](images/music-card-nesthub.jpg)
 
 A Lovelace card that puts Music Assistant behind one screen, built for touch panels and for Google Nest Hub cast dashboards at 1024×600.
 
