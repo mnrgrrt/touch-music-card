@@ -1,6 +1,6 @@
 # Touch music card
 
-![The card on a Nest Hub](images/music-card-nesthub.jpg)
+![The card at the 1024×600 of a Nest Hub, searching](images/music-card-search-light.png)
 
 A Lovelace card that puts Music Assistant behind one screen, built for touch panels and for Google Nest Hub cast dashboards at 1024×600.
 
@@ -39,8 +39,6 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 **Covers that do not go stale.** A tile does not need an image URL. The card asks Music Assistant what the cover is now, so a playlist that changes its artwork changes on the card too. Pin an `image:` only when you want a particular one.
 
 **Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none. Results drill down: an album opens its tracks, an artist opens their albums.
-
-![Searching, in a light theme](images/music-card-search-light.png)
 
 **Light or dark from the theme it sits in.** The card measures the background its own theme gives it, not the operating system's preference. A view can carry a theme of its own, so a light dashboard on a laptop set to dark mode still gets dark text.
 
