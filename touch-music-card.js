@@ -1483,6 +1483,8 @@ class MusicAssistantTouchCard extends HTMLElement {
             pic: a.entity_picture_local || a.entity_picture || '',
           });
           if (lijst.length > 10) lijst.shift();
+          this._reeksTijd = this._reeksTijd || {};
+          this._reeksTijd[ent] = Date.now();
         }
         const ouder = lijst[lijst.length - 1 - achter];
         if (ouder) {
@@ -1490,6 +1492,21 @@ class MusicAssistantTouchCard extends HTMLElement {
             media_title: ouder.titel,
             media_artist: ouder.artiest,
             entity_picture: ouder.pic,
+            entity_picture_local: '',
+          });
+        }
+      }
+      // The programme's name also arrives in the middle of a song, which looks the
+      // same as a real talk break. So it only takes over once no new title has come
+      // in for five minutes: a break or the news, rather than a flip mid-song.
+      const sinds = (this._reeksTijd || {})[ent];
+      if (programma && sinds && Date.now() - sinds < 300000) {
+        const vorig = lijst[lijst.length - 1 - achter];
+        if (vorig) {
+          return Object.assign({}, a, {
+            media_title: vorig.titel,
+            media_artist: vorig.artiest,
+            entity_picture: vorig.pic,
             entity_picture_local: '',
           });
         }
