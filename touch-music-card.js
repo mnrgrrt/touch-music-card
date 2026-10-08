@@ -1452,6 +1452,50 @@ class MusicAssistantTouchCard extends HTMLElement {
   }
 
   // ---------- live speler ----------
+  // A speaker plays from a buffer, so a radio stream announces the next title
+  // while you are still hearing the previous song: the card runs a track ahead.
+  // 'radio_delay' holds every change in title, artist and artwork back by that
+  // many seconds, so what you see matches what you hear. A talk break still shows
+  // as a talk break, just as late as the sound. Zero (the default) changes nothing.
+  // Only radio is held back: a track from a library or from Spotify has a length
+  // and starts when the player says it starts, so there is nothing to make up for.
+  _metaLater(ent, a) {
+    const wacht = Math.max(0, Number(this._cfg.radio_delay) || 0) * 1000;
+    const radio = !a.media_duration && !!a.media_title;
+    if (!ent || !wacht || !radio) return a;
+    if (!this._meta) this._meta = {};
+    const rij = this._meta[ent] || (this._meta[ent] = []);
+    const nu = Date.now();
+    const nieuw = {
+      titel: a.media_title || '',
+      artiest: a.media_artist || '',
+      pic: a.entity_picture_local || a.entity_picture || '',
+    };
+    const laatste = rij.length ? rij[rij.length - 1] : null;
+    if (!laatste || laatste.titel !== nieuw.titel || laatste.artiest !== nieuw.artiest || laatste.pic !== nieuw.pic) {
+      rij.push(Object.assign({}, nieuw, { t: nu }));
+      if (rij.length > 20) rij.shift();
+    }
+    // The newest entry that is old enough to be audible by now.
+    let toon = rij[0];
+    for (const x of rij) { if (nu - x.t >= wacht) toon = x; }
+    // Still waiting on the next one: come back when it is due.
+    const volgende = rij.find(x => nu - x.t < wacht);
+    if (volgende && !this._metaTimer) {
+      this._metaTimer = setTimeout(() => {
+        this._metaTimer = null;
+        this._syncSpeler();
+      }, wacht - (nu - volgende.t) + 100);
+    }
+    if (!toon || (toon.titel === nieuw.titel && toon.artiest === nieuw.artiest && toon.pic === nieuw.pic)) return a;
+    return Object.assign({}, a, {
+      media_title: toon.titel,
+      media_artist: toon.artiest,
+      entity_picture: toon.pic,
+      entity_picture_local: '',
+    });
+  }
+
   _syncSpeler() {
     const sr = this.shadowRoot;
     if (!sr || !sr.getElementById('np')) return;
@@ -1479,7 +1523,7 @@ class MusicAssistantTouchCard extends HTMLElement {
 
     const s = this._st(ent);
     const np = sr.getElementById('np');
-    const a = (s && s.attributes) || {};
+    const a = this._metaLater(ent, (s && s.attributes) || {});
     const pic = a.entity_picture_local || a.entity_picture || '';
     const t = this._taal();
     const titel = a.media_title || (s ? t.stil : t.geenSpeler);
