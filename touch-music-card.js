@@ -1462,7 +1462,40 @@ class MusicAssistantTouchCard extends HTMLElement {
   _metaLater(ent, a) {
     const wacht = Math.max(0, Number(this._cfg.radio_delay) || 0) * 1000;
     const radio = !a.media_duration && !!a.media_title;
-    if (!ent || !wacht || !radio) return a;
+    const achter = Math.max(0, Number(this._cfg.radio_lag) || 0);
+    if (!ent || !radio || (!wacht && !achter)) return a;
+    if (achter) {
+      // Some stations publish their titles a whole song ahead: while you hear one
+      // track, the stream already names the next. A song has no fixed length, so
+      // seconds cannot fix that - staying one title behind can. The programme's
+      // own name (artist equal to the station) is not a track and passes straight
+      // through, so a talk break still shows as a talk break.
+      const zender = a.media_album_name || a.media_channel || '';
+      const programma = !!zender && (a.media_artist || '') === zender;
+      if (!this._reeks) this._reeks = {};
+      const lijst = this._reeks[ent] || (this._reeks[ent] = []);
+      if (!programma) {
+        const kop = lijst.length ? lijst[lijst.length - 1] : null;
+        if (!kop || kop.titel !== a.media_title) {
+          lijst.push({
+            titel: a.media_title,
+            artiest: a.media_artist || '',
+            pic: a.entity_picture_local || a.entity_picture || '',
+          });
+          if (lijst.length > 10) lijst.shift();
+        }
+        const ouder = lijst[lijst.length - 1 - achter];
+        if (ouder) {
+          return Object.assign({}, a, {
+            media_title: ouder.titel,
+            media_artist: ouder.artiest,
+            entity_picture: ouder.pic,
+            entity_picture_local: '',
+          });
+        }
+      }
+      return a;
+    }
     if (!this._meta) this._meta = {};
     const rij = this._meta[ent] || (this._meta[ent] = []);
     const nu = Date.now();
