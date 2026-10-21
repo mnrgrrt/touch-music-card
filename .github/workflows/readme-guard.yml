@@ -1,0 +1,31 @@
+name: README guard
+
+on:
+  push:
+    paths:
+      - "README.md"
+  pull_request:
+    paths:
+      - "README.md"
+  workflow_dispatch:
+
+jobs:
+  no-duplicate-readme:
+    name: Geen dubbele README
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tel top-level koppen
+        run: |
+          count=$(grep -c '^# ' README.md || true)
+          echo "Aantal '# ' koppen: $count"
+          if [ "$count" -gt 1 ]; then
+            echo "::error file=README.md::README.md bevat $count top-level koppen; waarschijnlijk staat het document er meer dan een keer in."
+            grep -n '^# ' README.md
+            exit 1
+          fi
+          lines=$(wc -l < README.md)
+          echo "README.md telt $lines regels."
+          if [ "$lines" -gt 600 ]; then
+            echo "::warning file=README.md::README.md is $lines regels; controleer op een aangeplakte oude versie."
+          fi
