@@ -179,6 +179,7 @@ const TAAL = {
 const LAYOUTS = {
   qwerty: ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'],
   azerty: ['azertyuiop', 'qsdfghjklm', 'wxcvbn'],
+  abc: ['abcdefghij', 'klmnopqrs', 'tuvwxyz'],
 };
 
 const STYLE = `
@@ -1880,6 +1881,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         { name: 'keyboard', selector: { boolean: {} } },
         { name: 'keyboard_layout', selector: { select: { mode: 'dropdown', options: [
           { value: 'qwerty', label: 'QWERTY' }, { value: 'azerty', label: 'AZERTY' },
+          { value: 'abc', label: 'ABC' },
         ] } } },
         { name: 'limit', selector: { number: { min: 6, max: 100, step: 1, mode: 'box' } } },
         { name: 'search_types', selector: { select: { multiple: true, mode: 'list', options: [
