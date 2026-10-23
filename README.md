@@ -38,7 +38,7 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 **Covers that do not go stale.** A tile does not need an image URL. The card asks Music Assistant what the cover is now, so a playlist that changes its artwork changes on the card too. Pin an `image:` only when you want a particular one.
 
-**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none. Results drill down: an album opens its tracks, an artist opens their albums.
+**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY or AZERTY. Results drill down: an album opens its tracks, an artist opens their albums.
 
 ![Searching, in a light theme](images/music-card-search-light.png)
 
@@ -179,6 +179,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `search_types` | all four | Which of track, album, artist, playlist can be searched. |
 | `tile_action` | `open` | `open` shows a tile's tracks, `play` starts it straight away. |
 | `keyboard` | `true` | The on-screen keyboard. Set `false` on a phone or PC to use a normal text field. |
+| `keyboard_layout` | `qwerty` | Letter layout of the on-screen keyboard: `qwerty` or `azerty`. |
 | `arrows` | `true` | Scroll buttons beside the lists, for panels without a scrollbar. |
 | `transfer_on_switch` | `true` | Move the queue along when you switch speaker. `false` switches the view only. |
 | `retry_next` | `true` | Re-send a skip if nothing happens, which Chromecast players sometimes need. |
@@ -195,6 +196,42 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `volume_max` | inherits | Override the slider range for this zone. |
 | `volume_start` | inherits | Override the fallback volume for this zone. |
 | `before` | — | Switch a group off, detach speakers, or join them together before playing here. |
+
+### Playing on several speakers at once
+
+There are two ways, and the card supports both because my own house needs both.
+
+**Downstairs**, the kitchen and the conservatory have Sonos speakers. Sonos can group itself, so the card does it: the *Both* button plays on the kitchen speaker and first joins the conservatory to it. Going from *Kitchen* to *Both* is the same player, so nothing moves and the music doesn't stop; the second speaker simply falls in.
+
+```yaml
+zones:
+  - name: Kitchen
+    entity: media_player.kitchen
+    before:
+      unjoin: media_player.conservatory
+  - name: Both
+    entity: media_player.kitchen
+    icon: groep
+    before:
+      join:
+        leader: media_player.kitchen
+        members: [media_player.conservatory]
+```
+
+**In my study**, a JBL soundbar and a JBL speaker play over Chromecast, and those cannot group themselves. There, a group made in Music Assistant does the job. It is a player of its own, so you add it as a zone, and switching to it moves the queue across.
+
+```yaml
+zones:
+  - name: Soundbar
+    entity: media_player.jbl_soundbar
+    before:
+      turn_off: media_player.jbl_group
+  - name: Both
+    entity: media_player.jbl_group
+    icon: groep
+```
+
+Which one you need depends on your speakers. Can they group themselves (Sonos, and several other players Music Assistant can sync), use `join`: it is the smoothest. Can they not, or do you want to combine different kinds of speakers, make a group in Music Assistant.
 
 **A warning about `before: turn_off`.** If the player you switch off shares its queue with the player you are switching to — which is what a Music Assistant group and its members do — then switching it off empties that queue, and the queue transfer that follows finds nothing to move. The music stops instead of following you. The card guards against this by deferring such a switch-off until after the transfer, and falls back to restarting the track if Music Assistant refuses the transfer anyway. Even so: if a zone is a member of the group you are turning off, you usually do not need `before` at all. The transfer moves playback off the group by itself.
 
