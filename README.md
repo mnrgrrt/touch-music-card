@@ -38,7 +38,7 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 **Covers that do not go stale.** A tile does not need an image URL. The card asks Music Assistant what the cover is now, so a playlist that changes its artwork changes on the card too. Pin an `image:` only when you want a particular one.
 
-**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY or AZERTY. Results drill down: an album opens its tracks, an artist opens their albums.
+**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY, AZERTY or ABC. Results drill down: an album opens its tracks, an artist opens their albums.
 
 ![Searching, in a light theme](images/music-card-search-light.png)
 
@@ -179,7 +179,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `search_types` | all four | Which of track, album, artist, playlist can be searched. |
 | `tile_action` | `open` | `open` shows a tile's tracks, `play` starts it straight away. |
 | `keyboard` | `true` | The on-screen keyboard. Set `false` on a phone or PC to use a normal text field. |
-| `keyboard_layout` | `qwerty` | Letter layout of the on-screen keyboard: `qwerty` or `azerty`. |
+| `keyboard_layout` | `qwerty` | Letter layout of the on-screen keyboard: `qwerty`, `azerty` or `abc` (alphabetical). |
 | `arrows` | `true` | Scroll buttons beside the lists, for panels without a scrollbar. |
 | `transfer_on_switch` | `true` | Move the queue along when you switch speaker. `false` switches the view only. |
 | `retry_next` | `true` | Re-send a skip if nothing happens, which Chromecast players sometimes need. |
