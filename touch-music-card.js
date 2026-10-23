@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.1';
+const VERSIE = '2.4.5';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -102,7 +102,7 @@ const TAAL = {
       volume_start: 'Drop back to (%) when starting above that maximum',
       language: 'Language', limit: 'Search results per type',
       search_types: 'Searchable', tile_action: 'Tapping a tile',
-      keyboard: 'On-screen keyboard', arrows: 'Scroll buttons next to lists',
+      keyboard: 'On-screen keyboard', keyboard_layout: 'Keyboard layout', arrows: 'Scroll buttons next to lists',
       transfer_on_switch: 'Move the queue when switching speaker',
       retry_next: 'Re-send skip if nothing happens (Chromecast)',
       automatisch: 'Follow Home Assistant', openen: 'Show its tracks', afspelen: 'Play it',
@@ -147,7 +147,7 @@ const TAAL = {
       volume_start: 'Bij starten terugzetten naar (%) als het daarboven staat',
       language: 'Taal', limit: 'Zoekresultaten per soort',
       search_types: 'Waarop zoeken', tile_action: 'Tegel aantikken',
-      keyboard: 'Schermtoetsenbord', arrows: 'Scrolknoppen naast lijsten',
+      keyboard: 'Schermtoetsenbord', keyboard_layout: 'Toetsenbordindeling', arrows: 'Scrolknoppen naast lijsten',
       transfer_on_switch: 'Muziek meenemen bij wisselen van speaker',
       retry_next: 'Doorspoelen opnieuw sturen als er niets gebeurt (Chromecast)',
       automatisch: 'Die van Home Assistant', openen: 'Nummers tonen', afspelen: 'Meteen afspelen',
@@ -174,7 +174,12 @@ const TAAL = {
   },
 };
 
-const RIJEN = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+// Letter rows of the on-screen keyboard. `keyboard_layout:` picks one; QWERTY is
+// the default. Adding a layout = one more line here and one in the editor list.
+const LAYOUTS = {
+  qwerty: ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'],
+  azerty: ['azertyuiop', 'qsdfghjklm', 'wxcvbn'],
+};
 
 const STYLE = `
 :host {
@@ -1388,7 +1393,7 @@ class MusicAssistantTouchCard extends HTMLElement {
   _kbdHtml() {
     const kn = (t, l, cls) => `<button class="${cls || ''}" data-act="toets" data-t="${t}">${l}</button>`;
     const num = `<div class="kr num">${[...'1234567890'].map((c) => kn(c, c)).join('')}</div>`;
-    const rijen = RIJEN.map((r, idx) => {
+    const rijen = (LAYOUTS[this._cfg.keyboard_layout] || LAYOUTS.qwerty).map((r, idx) => {
       let html = [...r].map((c) => kn(c, c.toUpperCase())).join('');
       if (idx === 2) html += kn('BS', '&#9003;');
       return `<div class="kr">${html}</div>`;
@@ -1873,6 +1878,9 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     algVak.appendChild(this._paneel(ed.zoekKop, this._form(
       [
         { name: 'keyboard', selector: { boolean: {} } },
+        { name: 'keyboard_layout', selector: { select: { mode: 'dropdown', options: [
+          { value: 'qwerty', label: 'QWERTY' }, { value: 'azerty', label: 'AZERTY' },
+        ] } } },
         { name: 'limit', selector: { number: { min: 6, max: 100, step: 1, mode: 'box' } } },
         { name: 'search_types', selector: { select: { multiple: true, mode: 'list', options: [
           { value: 'track', label: sn.track }, { value: 'album', label: sn.album },
@@ -1881,11 +1889,14 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       ],
       {
         keyboard: c.keyboard !== false,
+        keyboard_layout: c.keyboard_layout || 'qwerty',
         limit: c.limit == null ? 24 : c.limit,
         search_types: c.search_types || ['track', 'album', 'artist', 'playlist'],
       },
       (v) => {
         this._cfg.keyboard = !!v.keyboard;
+        if (v.keyboard_layout && v.keyboard_layout !== 'qwerty') this._cfg.keyboard_layout = v.keyboard_layout;
+        else delete this._cfg.keyboard_layout;
         this._cfg.limit = v.limit;
         this._cfg.search_types = v.search_types;
         this._melden();
