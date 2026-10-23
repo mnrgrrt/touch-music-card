@@ -50,11 +50,12 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 ## Install
 
-HACS does not list this card, so add it as a custom repository:
+The card is in the HACS default list:
 
-1. HACS → three dots at the top right → **Custom repositories**
-2. URL: `https://github.com/mnrgrrt/touch-music-card`, category **Dashboard**
-3. Install **Touch music card**, then hard-refresh your browser
+1. Open HACS and search for **Touch music card**
+2. Click **Download**, then hard-refresh your browser
+
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mnrgrrt&repository=touch-music-card&category=plugin)
 
 Or copy `touch-music-card.js` to `config/www/` yourself and add it under Settings → Dashboards → three dots → Resources as `/local/touch-music-card.js`, type JavaScript module.
 
