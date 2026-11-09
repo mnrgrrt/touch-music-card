@@ -191,7 +191,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | Key | Default | What it does |
 | --- | --- | --- |
 | `name` | — | The label on the button. |
-| `entity` | — | A Music Assistant `media_player`, a single speaker or a group. |
+| `entity` | — | A Music Assistant `media_player`, a single speaker or a group. Not the speaker's own entity from Cast, DLNA or Sonos: that one only gets a bare stream from Music Assistant, with the stream URL as title and no working buttons. The card swaps such an entity for the Music Assistant player with the same name, or tells you to pick the right one. |
 | `icon` | — | One of the card's built-in icons, or an `mdi:` name. |
 | `volume` | `entity` | Send volume to a different entity than the one that plays. |
 | `volume_max` | inherits | Override the slider range for this zone. |

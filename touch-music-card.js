@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.6';
+const VERSIE = '2.4.7';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -92,6 +92,8 @@ const TAAL = {
     bezigOphalen: 'Loading...', geenNummers: 'No tracks found.',
     nummer: 'track', nummers: 'tracks', uur: 'h', minuut: 'min',
     stil: 'Nothing playing', geenSpeler: 'Player not found',
+    nietMA: 'Not a Music Assistant player',
+    nietMAuitleg: 'Pick the Music Assistant entity for this speaker in the card editor.',
     speeltOp: 'playing on', shuffleTitel: 'Shuffle', herhaalTitel: 'Repeat',
     ed: {
       algemeen: 'General', zones: 'Speakers', cats: 'Categories', links: 'Navigation buttons',
@@ -137,6 +139,8 @@ const TAAL = {
     bezigOphalen: 'Bezig met ophalen...', geenNummers: 'Geen nummers gevonden.',
     nummer: 'nummer', nummers: 'nummers', uur: 'u', minuut: 'min',
     stil: 'Niets aan het spelen', geenSpeler: 'Speler niet gevonden',
+    nietMA: 'Geen Music Assistant-speler',
+    nietMAuitleg: 'Kies in de kaarteditor de Music Assistant-entity van deze speaker.',
     speeltOp: 'speelt op', shuffleTitel: 'Willekeurige volgorde', herhaalTitel: 'Herhalen',
     ed: {
       algemeen: 'Algemeen', zones: 'Speakers', cats: 'Categorieen', links: 'Navigatieknoppen',
@@ -700,8 +704,40 @@ class MusicAssistantTouchCard extends HTMLElement {
 
   // ---------- helpers ----------
   _zoneCfg() { const z = this._zoneLijst(); return z[Math.min(this._zone, z.length - 1)]; }
-  _speler() { return this._zoneCfg().entity; }
-  _volEntity() { return this._zoneCfg().volume || this._zoneCfg().entity; }
+  _speler() { return this._maSpeler(this._zoneCfg().entity).ent; }
+  _volEntity() { return this._zoneCfg().volume || this._speler(); }
+
+  // A zone has to be the media_player that Music Assistant itself creates. A
+  // speaker usually also has its own entity from its own integration (Cast,
+  // DLNA, Sonos, ...). Point a zone at that one and Music Assistant only hands
+  // it a bare stream: the title shows the stream URL and next, previous,
+  // shuffle and repeat do nothing, because the queue lives in Music Assistant.
+  // So a zone entity without mass_player_type is swapped for the Music
+  // Assistant player with the same name. Is there no single such player, the
+  // card says so instead of showing a URL. An unavailable entity has lost its
+  // attributes, so that one is left alone.
+  _maSpeler(id) {
+    const s = id ? this._st(id) : null;
+    if (!s || ['unavailable', 'unknown'].includes(s.state)) return { ent: id };
+    const a = s.attributes || {};
+    if (a.mass_player_type) return { ent: id };
+    if (!this._maCache || this._maCache.hass !== this._hass) this._maCache = { hass: this._hass, m: {} };
+    if (Object.prototype.hasOwnProperty.call(this._maCache.m, id)) return this._maCache.m[id];
+    let uit = { ent: id, nietMA: true };
+    const naam = String(a.friendly_name || '').trim().toLowerCase();
+    if (naam) {
+      const st = this._hass.states;
+      const hits = [];
+      for (const k of Object.keys(st)) {
+        if (k === id || !k.startsWith('media_player.')) continue;
+        const b = st[k].attributes || {};
+        if (b.mass_player_type && String(b.friendly_name || '').trim().toLowerCase() === naam) hits.push(k);
+      }
+      if (hits.length === 1) uit = { ent: hits[0] };
+    }
+    this._maCache.m[id] = uit;
+    return uit;
+  }
   _st(e) { return (this._hass && this._hass.states[e]) || null; }
 
   // De speler die de muziek echt vasthoudt. Staat de gekozen zone zelf te spelen,
@@ -875,7 +911,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     this._zone = i;
     this._opt = null;
     this._syncSpeler();
-    const nieuw = this._zoneCfg();
+    const nieuw = { entity: this._speler() };
     if (el) el.classList.add('bezig');
     try {
       // Zelfde speler, andere samenstelling (bv. Sonos keuken alleen tegenover
@@ -1562,7 +1598,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     zs.forEach((b, i) => {
       b.classList.toggle('on', i === this._zone);
       const z = zones[i];
-      const zst = z && this._st(z.entity);
+      const zst = z && this._st(this._maSpeler(z.entity).ent);
       b.classList.toggle('speelt', !!(zst && SPEELT.includes(zst.state)));
     });
 
@@ -1582,8 +1618,10 @@ class MusicAssistantTouchCard extends HTMLElement {
     const a = this._metaLater(ent, (s && s.attributes) || {});
     const pic = a.entity_picture_local || a.entity_picture || '';
     const t = this._taal();
-    const titel = a.media_title || (s ? t.stil : t.geenSpeler);
-    const artiest = [a.media_artist, a.media_album_name].filter(Boolean).join(' · ');
+    const nietMA = ent === eigen && !!this._maSpeler(this._zoneCfg().entity).nietMA;
+    const titel = nietMA ? t.nietMA : (a.media_title || (s ? t.stil : t.geenSpeler));
+    const artiest = nietMA ? t.nietMAuitleg
+      : [a.media_artist, a.media_album_name].filter(Boolean).join(' · ');
 
     // Na een druk op play/pauze tonen we alvast de nieuwe stand, tot de speler
     // het echt bevestigt (of de tijd om is).
@@ -1606,8 +1644,8 @@ class MusicAssistantTouchCard extends HTMLElement {
       ? `<div class="op">${t.speeltOp} ${esc(a.friendly_name || ent)}</div>` : '';
     const duur = parseInt(a.media_duration, 10) || 0;
     np.innerHTML = `
-      ${pic ? `<div class="glow" style="background-image:url('${esc(pic)}')"></div>` : ''}
-      ${pic ? `<img class="art" src="${esc(pic)}">`
+      ${pic && !nietMA ? `<div class="glow" style="background-image:url('${esc(pic)}')"></div>` : ''}
+      ${pic && !nietMA ? `<img class="art" src="${esc(pic)}">`
             : `<div class="leegart">${svg('muziek')}</div>`}
       <div class="tx">
         <div class="t">${esc(titel)}</div>
@@ -1916,7 +1954,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         { name: 'name', selector: { text: {} } },
         { name: 'icon', selector: { icon: {} } },
       ] },
-      { name: 'entity', selector: { entity: { filter: { domain: 'media_player' } } } },
+      { name: 'entity', selector: { entity: { filter: { domain: 'media_player', integration: 'music_assistant' } } } },
       { name: 'volume', selector: { entity: { filter: { domain: 'media_player' } } } },
       { name: '', type: 'grid', schema: [
         { name: 'volume_max', selector: { number: { min: 5, max: 100, step: 1, mode: 'box' } } },
