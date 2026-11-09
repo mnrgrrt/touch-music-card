@@ -191,7 +191,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | Key | Default | What it does |
 | --- | --- | --- |
 | `name` | — | The label on the button. |
-| `entity` | — | A Music Assistant `media_player`, a single speaker or a group. Not the speaker's own entity from Cast, DLNA or Sonos: that one only gets a bare stream from Music Assistant, with the stream URL as title and no working buttons. The card swaps such an entity for the Music Assistant player with the same name, or tells you to pick the right one. |
+| `entity` | — | A Music Assistant `media_player`, a single speaker or a group. Not the speaker's own entity from Cast, DLNA or Sonos: that one only gets a bare stream from Music Assistant, with the stream URL as title and no working buttons. The card swaps such an entity for the Music Assistant player with the same name, or tells you it gets no track info. See *Speakers that Music Assistant reaches through Home Assistant* below. |
 | `icon` | — | One of the card's built-in icons, or an `mdi:` name. |
 | `volume` | `entity` | Send volume to a different entity than the one that plays. |
 | `volume_max` | inherits | Override the slider range for this zone. |
@@ -233,6 +233,8 @@ zones:
 ```
 
 Which one you need depends on your speakers. Can they group themselves (Sonos, and several other players Music Assistant can sync), use `join`: it is the smoothest. Can they not, or do you want to combine different kinds of speakers, make a group in Music Assistant.
+
+**Speakers that Music Assistant reaches through Home Assistant.** Music Assistant can use any Home Assistant media player through its *Home Assistant MediaPlayers* provider. As far as I can tell, it then makes no Home Assistant entity of its own for that speaker. The card can only point at the speaker's own entity, which gets a bare stream from Music Assistant: no title, no cover, no queue. Play, pause and volume work, next and previous do not. The card says *No track info from Music Assistant* in that case. If Music Assistant can reach the speaker with one of its own providers (Chromecast, AirPlay, Sonos and so on), use that instead: then you get a proper Music Assistant entity and everything works. I cannot test this myself, so tell me in an issue if your setup behaves differently.
 
 **A warning about `before: turn_off`.** If the player you switch off shares its queue with the player you are switching to — which is what a Music Assistant group and its members do — then switching it off empties that queue, and the queue transfer that follows finds nothing to move. The music stops instead of following you. The card guards against this by deferring such a switch-off until after the transfer, and falls back to restarting the track if Music Assistant refuses the transfer anyway. Even so: if a zone is a member of the group you are turning off, you usually do not need `before` at all. The transfer moves playback off the group by itself.
 

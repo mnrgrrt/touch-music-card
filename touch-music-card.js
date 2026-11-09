@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.7';
+const VERSIE = '2.4.8';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -92,8 +92,8 @@ const TAAL = {
     bezigOphalen: 'Loading...', geenNummers: 'No tracks found.',
     nummer: 'track', nummers: 'tracks', uur: 'h', minuut: 'min',
     stil: 'Nothing playing', geenSpeler: 'Player not found',
-    nietMA: 'Not a Music Assistant player',
-    nietMAuitleg: 'Pick the Music Assistant entity for this speaker in the card editor.',
+    nietMA: 'No track info from Music Assistant',
+    nietMAuitleg: 'This speaker reaches Music Assistant through Home Assistant. See the README.',
     speeltOp: 'playing on', shuffleTitel: 'Shuffle', herhaalTitel: 'Repeat',
     ed: {
       algemeen: 'General', zones: 'Speakers', cats: 'Categories', links: 'Navigation buttons',
@@ -139,8 +139,8 @@ const TAAL = {
     bezigOphalen: 'Bezig met ophalen...', geenNummers: 'Geen nummers gevonden.',
     nummer: 'nummer', nummers: 'nummers', uur: 'u', minuut: 'min',
     stil: 'Niets aan het spelen', geenSpeler: 'Speler niet gevonden',
-    nietMA: 'Geen Music Assistant-speler',
-    nietMAuitleg: 'Kies in de kaarteditor de Music Assistant-entity van deze speaker.',
+    nietMA: 'Geen nummerinfo van Music Assistant',
+    nietMAuitleg: 'Deze speaker komt via Home Assistant in Music Assistant. Zie de README.',
     speeltOp: 'speelt op', shuffleTitel: 'Willekeurige volgorde', herhaalTitel: 'Herhalen',
     ed: {
       algemeen: 'Algemeen', zones: 'Speakers', cats: 'Categorieen', links: 'Navigatieknoppen',
@@ -714,7 +714,11 @@ class MusicAssistantTouchCard extends HTMLElement {
   // shuffle and repeat do nothing, because the queue lives in Music Assistant.
   // So a zone entity without mass_player_type is swapped for the Music
   // Assistant player with the same name. Is there no single such player, the
-  // card says so instead of showing a URL. An unavailable entity has lost its
+  // card says so instead of showing a URL. That happens for a speaker that
+  // Music Assistant only knows through its "Home Assistant MediaPlayers"
+  // provider: as far as we can tell, Music Assistant then makes no entity of
+  // its own for it, so there is nothing better to point the zone at. The
+  // editor still lets you pick such a speaker; play, pause and volume work. An unavailable entity has lost its
   // attributes, so that one is left alone.
   _maSpeler(id) {
     const s = id ? this._st(id) : null;
@@ -1954,7 +1958,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         { name: 'name', selector: { text: {} } },
         { name: 'icon', selector: { icon: {} } },
       ] },
-      { name: 'entity', selector: { entity: { filter: { domain: 'media_player', integration: 'music_assistant' } } } },
+      { name: 'entity', selector: { entity: { filter: { domain: 'media_player' } } } },
       { name: 'volume', selector: { entity: { filter: { domain: 'media_player' } } } },
       { name: '', type: 'grid', schema: [
         { name: 'volume_max', selector: { number: { min: 5, max: 100, step: 1, mode: 'box' } } },
