@@ -22,7 +22,10 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.8';
+const VERSIE = '2.4.9';
+
+// Names compare without case, accents or spaces at the ends.
+const NORM = (x) => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -68,6 +71,9 @@ const SOORT_VAN = (uri) => ((uri || '').split('://')[1] || '').split('/')[0] || 
 // from second to second, and a cast dashboard is open for days: too short and
 // the card hangs on the wire, too long and a new playlist stays invisible.
 const BIB_TTL = 10 * 60 * 1000;
+// After a failed or empty answer (Music Assistant still starting after a
+// restart, say), try again soon instead of showing nothing for ten minutes.
+const BIB_OPNIEUW = [30, 60, 120, 300].map((x) => x * 1000);
 const BIB_MAX = 500;
 
 const SOORTEN = [
@@ -93,7 +99,7 @@ const TAAL = {
     nummer: 'track', nummers: 'tracks', uur: 'h', minuut: 'min',
     stil: 'Nothing playing', geenSpeler: 'Player not found',
     nietMA: 'No track info from Music Assistant',
-    nietMAuitleg: 'This speaker reaches Music Assistant through Home Assistant. See the README.',
+    nietMAuitleg: 'In Music Assistant, turn on "Expose this player to Home Assistant" for this speaker and pick that entity.',
     speeltOp: 'playing on', shuffleTitel: 'Shuffle', herhaalTitel: 'Repeat',
     ed: {
       algemeen: 'General', zones: 'Speakers', cats: 'Categories', links: 'Navigation buttons',
@@ -109,6 +115,7 @@ const TAAL = {
       retry_next: 'Re-send skip if nothing happens (Chromecast)',
       automatisch: 'Follow Home Assistant', openen: 'Show its tracks', afspelen: 'Play it',
       naam: 'Name', entity: 'Player', volume: 'Volume goes to (optional)', icon: 'Icon',
+      ma_player: 'Music Assistant name (optional, finds the player again if its entity id changes)',
       turn_off: 'First switch off (optional)', unjoin: 'First detach (optional)',
       joinLeader: 'First group onto (optional)', joinMembers: 'these speakers',
       uri: 'Media id', image: 'Cover image URL (optional)',
@@ -140,7 +147,7 @@ const TAAL = {
     nummer: 'nummer', nummers: 'nummers', uur: 'u', minuut: 'min',
     stil: 'Niets aan het spelen', geenSpeler: 'Speler niet gevonden',
     nietMA: 'Geen nummerinfo van Music Assistant',
-    nietMAuitleg: 'Deze speaker komt via Home Assistant in Music Assistant. Zie de README.',
+    nietMAuitleg: 'Zet in Music Assistant bij deze speaker "Expose this player to Home Assistant" aan en kies die entity.',
     speeltOp: 'speelt op', shuffleTitel: 'Willekeurige volgorde', herhaalTitel: 'Herhalen',
     ed: {
       algemeen: 'Algemeen', zones: 'Speakers', cats: 'Categorieen', links: 'Navigatieknoppen',
@@ -156,6 +163,7 @@ const TAAL = {
       retry_next: 'Doorspoelen opnieuw sturen als er niets gebeurt (Chromecast)',
       automatisch: 'Die van Home Assistant', openen: 'Nummers tonen', afspelen: 'Meteen afspelen',
       naam: 'Naam', entity: 'Speler', volume: 'Volume gaat naar (optioneel)', icon: 'Icoon',
+      ma_player: 'Naam in Music Assistant (optioneel, vindt de speler terug als de entity-id verandert)',
       turn_off: 'Eerst uitzetten (optioneel)', unjoin: 'Eerst loskoppelen (optioneel)',
       joinLeader: 'Eerst groeperen op (optioneel)', joinMembers: 'met deze speakers',
       uri: 'Media-id', image: 'Afbeelding-URL (optioneel)',
@@ -480,6 +488,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     this._beeld = {};      // uri -> the cover Music Assistant has right now
     this._bron = {};       // source key -> { tijd, items }
     this._bezigBron = {};  // source key -> in-flight promise, so two draws fetch once
+    this._pogingen = {};   // source key -> retries after an empty or failed answer
   }
 
   static getConfigElement() {
@@ -593,17 +602,36 @@ class MusicAssistantTouchCard extends HTMLElement {
       this._onthoudBeeld(items);
       this._bron[s] = { tijd: Date.now(), items };
       delete this._bezigBron[s];
+      if (items.length) delete this._pogingen[s];
+      else this._straksOpnieuw(s);
       return items;
     }).catch((e) => {
       // A failed fetch is cached as empty for the same TTL. Without that, a
       // Music Assistant that is down turns every redraw into another attempt.
       this._bron[s] = { tijd: Date.now(), items: [] };
       delete this._bezigBron[s];
-      this._fout(e);
+      if (!this._straksOpnieuw(s)) this._fout(e);
       return [];
     });
     this._bezigBron[s] = p;
     return p;
+  }
+
+  // An empty or failed answer is cached, but only briefly: 30 s, then 1, 2
+  // and 5 minutes. After that the normal ten minutes apply. Returns true when
+  // an error need not be shown again: only the first and the last failure are.
+  _straksOpnieuw(s) {
+    this._pogingen = this._pogingen || {};
+    const n = this._pogingen[s] || 0;
+    if (n >= BIB_OPNIEUW.length) return false;
+    this._pogingen[s] = n + 1;
+    const wacht = BIB_OPNIEUW[n];
+    this._bron[s].tijd = Date.now() - BIB_TTL + wacht;
+    clearTimeout(this._opnieuwTimer);
+    this._opnieuwTimer = setTimeout(() => {
+      if (this.isConnected) this._vulAan();
+    }, wacht + 50);
+    return n > 0;
   }
 
   // Work out what is still missing and fetch it, once, in parallel.
@@ -704,7 +732,7 @@ class MusicAssistantTouchCard extends HTMLElement {
 
   // ---------- helpers ----------
   _zoneCfg() { const z = this._zoneLijst(); return z[Math.min(this._zone, z.length - 1)]; }
-  _speler() { return this._maSpeler(this._zoneCfg().entity).ent; }
+  _speler() { return this._maSpeler(this._zoneCfg()).ent; }
   _volEntity() { return this._zoneCfg().volume || this._speler(); }
 
   // A zone has to be the media_player that Music Assistant itself creates. A
@@ -718,29 +746,51 @@ class MusicAssistantTouchCard extends HTMLElement {
   // Music Assistant only knows through its "Home Assistant MediaPlayers"
   // provider: as far as we can tell, Music Assistant then makes no entity of
   // its own for it, so there is nothing better to point the zone at. The
-  // editor still lets you pick such a speaker; play, pause and volume work. An unavailable entity has lost its
-  // attributes, so that one is left alone.
-  _maSpeler(id) {
+  // editor still lets you pick such a speaker; play, pause and volume work.
+  // Turning on "Expose this player to Home Assistant" for it in Music Assistant
+  // gives it an entity of its own after all.
+  //
+  // Music Assistant can also re-create a player under a new entity id (a
+  // "_2" or "(MA)" on the end). The zone then points at an entity that no
+  // longer exists, so the card looks for the Music Assistant player by name:
+  // `ma_player` if the zone has one, else the zone's own name. An unavailable
+  // entity still exists and keeps its id, so that one is left alone.
+  _maSpeler(z) {
+    z = z || {};
+    const id = z.entity || '';
     const s = id ? this._st(id) : null;
-    if (!s || ['unavailable', 'unknown'].includes(s.state)) return { ent: id };
-    const a = s.attributes || {};
-    if (a.mass_player_type) return { ent: id };
+    if (s && ['unavailable', 'unknown'].includes(s.state)) return { ent: id };
+    if (s && (s.attributes || {}).mass_player_type) return { ent: id };
     if (!this._maCache || this._maCache.hass !== this._hass) this._maCache = { hass: this._hass, m: {} };
-    if (Object.prototype.hasOwnProperty.call(this._maCache.m, id)) return this._maCache.m[id];
-    let uit = { ent: id, nietMA: true };
-    const naam = String(a.friendly_name || '').trim().toLowerCase();
-    if (naam) {
-      const st = this._hass.states;
-      const hits = [];
-      for (const k of Object.keys(st)) {
-        if (k === id || !k.startsWith('media_player.')) continue;
-        const b = st[k].attributes || {};
-        if (b.mass_player_type && String(b.friendly_name || '').trim().toLowerCase() === naam) hits.push(k);
-      }
-      if (hits.length === 1) uit = { ent: hits[0] };
+    const sleutel = id + '|' + (z.ma_player || '') + '|' + (z.name || '');
+    if (Object.prototype.hasOwnProperty.call(this._maCache.m, sleutel)) return this._maCache.m[sleutel];
+    let uit;
+    if (s) {
+      // Exists, but is not a Music Assistant player: look for one with the same name.
+      const hit = this._maOpNaam(z.ma_player || (s.attributes || {}).friendly_name, id);
+      uit = hit ? { ent: hit } : { ent: id, nietMA: true };
+    } else {
+      // Gone (or never set): find it by name.
+      const hit = this._maOpNaam(z.ma_player, id) || this._maOpNaam(z.name, id);
+      uit = { ent: hit || id };
     }
-    this._maCache.m[id] = uit;
+    this._maCache.m[sleutel] = uit;
     return uit;
+  }
+
+  // The one Music Assistant player with this name, or null. Case and accents
+  // do not count. Two players with the same name: no guess, null.
+  _maOpNaam(naam, behalve) {
+    const n = NORM(naam);
+    if (!n || !this._hass) return null;
+    const st = this._hass.states;
+    const hits = [];
+    for (const k of Object.keys(st)) {
+      if (k === behalve || !k.startsWith('media_player.')) continue;
+      const b = st[k].attributes || {};
+      if (b.mass_player_type && NORM(b.friendly_name) === n) hits.push(k);
+    }
+    return hits.length === 1 ? hits[0] : null;
   }
   _st(e) { return (this._hass && this._hass.states[e]) || null; }
 
@@ -967,11 +1017,25 @@ class MusicAssistantTouchCard extends HTMLElement {
     if (el) el.classList.remove('bezig');
   }
 
+  // Every new choice gets a number. Filling the queue for an earlier choice
+  // stops as soon as a newer one comes in, and a new choice first lets the one
+  // call that is still on its way finish (at most a few seconds). Otherwise a
+  // quick second tap ends up with the rest of the first list behind it.
+  async _nieuweKeus() {
+    const gen = (this._speelGen = (this._speelGen || 0) + 1);
+    if (this._vul) {
+      await Promise.race([this._vul.catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
+    }
+    return gen;
+  }
+
   async _speel(uri, radio, el) {
     if (!uri) return;
     if (el) el.classList.add('bezig');
     this._opt = { state: 'playing', tot: Date.now() + 8000 };
     try {
+      const gen = await this._nieuweKeus();
+      if (gen !== this._speelGen) { if (el) el.classList.remove('bezig'); return; }
       await this._voorbereiden();
       await this._startVolume();
       await this._call('music_assistant', 'play_media',
@@ -995,6 +1059,8 @@ class MusicAssistantTouchCard extends HTMLElement {
     if (el) el.classList.add('bezig');
     this._opt = { state: 'playing', tot: Date.now() + 8000 };
     try {
+      const gen = await this._nieuweKeus();
+      if (gen !== this._speelGen) { if (el) el.classList.remove('bezig'); return; }
       await this._voorbereiden();
       await this._startVolume();
       // Eerst alleen het aangetikte nummer starten - dat gaat meteen.
@@ -1004,13 +1070,18 @@ class MusicAssistantTouchCard extends HTMLElement {
         { media_id: rij[0], enqueue: 'replace' }, { entity_id: speler });
       if (el) el.classList.remove('bezig');
       if (rij.length > 1) {
-        // Eerst een handjevol, zodat 'volgende' meteen iets heeft; daarna de rest.
-        const bij = (v) => this._call('music_assistant', 'play_media',
-          { media_id: v, enqueue: 'add' }, { entity_id: speler });
-        this._vul = bij(rij.slice(1, 6))
-          .then(() => (rij.length > 6 ? bij(rij.slice(6)) : null))
-          .catch((e) => this._fout(e))
-          .then(() => { this._vul = null; });
+        // Eerst een handjevol, zodat 'volgende' meteen iets heeft; daarna de rest
+        // in stukjes. Tussen elk stukje kijken of er inmiddels iets anders gekozen is.
+        const stukken = [rij.slice(1, 6)];
+        for (let k = 6; k < rij.length; k += 25) stukken.push(rij.slice(k, k + 25));
+        const vul = stukken.reduce((p, stuk) => p.then(() => {
+          if (gen !== this._speelGen) return null;
+          return this._call('music_assistant', 'play_media',
+            { media_id: stuk, enqueue: 'add' }, { entity_id: speler });
+        }), Promise.resolve())
+          .catch((e) => { if (gen === this._speelGen) this._fout(e); })
+          .then(() => { if (this._vul === vul) this._vul = null; });
+        this._vul = vul;
       } else this._vul = null;
       return;
     } catch (e) {
@@ -1602,7 +1673,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     zs.forEach((b, i) => {
       b.classList.toggle('on', i === this._zone);
       const z = zones[i];
-      const zst = z && this._st(this._maSpeler(z.entity).ent);
+      const zst = z && this._st(this._maSpeler(z).ent);
       b.classList.toggle('speelt', !!(zst && SPEELT.includes(zst.state)));
     });
 
@@ -1622,7 +1693,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     const a = this._metaLater(ent, (s && s.attributes) || {});
     const pic = a.entity_picture_local || a.entity_picture || '';
     const t = this._taal();
-    const nietMA = ent === eigen && !!this._maSpeler(this._zoneCfg().entity).nietMA;
+    const nietMA = ent === eigen && !!this._maSpeler(this._zoneCfg()).nietMA;
     const titel = nietMA ? t.nietMA : (a.media_title || (s ? t.stil : t.geenSpeler));
     const artiest = nietMA ? t.nietMAuitleg
       : [a.media_artist, a.media_album_name].filter(Boolean).join(' · ');
@@ -1694,6 +1765,7 @@ class MusicAssistantTouchCard extends HTMLElement {
 
   disconnectedCallback() {
     this._sleepLos();
+    clearTimeout(this._opnieuwTimer);
     clearInterval(this._tikTimer);
     clearInterval(this._scrollTimer);
     if (this._maatLuister) {
@@ -1959,6 +2031,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         { name: 'icon', selector: { icon: {} } },
       ] },
       { name: 'entity', selector: { entity: { filter: { domain: 'media_player' } } } },
+      { name: 'ma_player', selector: { text: {} } },
       { name: 'volume', selector: { entity: { filter: { domain: 'media_player' } } } },
       { name: '', type: 'grid', schema: [
         { name: 'volume_max', selector: { number: { min: 5, max: 100, step: 1, mode: 'box' } } },
@@ -1974,7 +2047,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       const b = z.before || {};
       const plat = {
         name: z.name || '', icon: this._mdi(z.icon), entity: z.entity || '',
-        volume: z.volume || '', volume_max: z.volume_max == null ? null : z.volume_max,
+        ma_player: z.ma_player || '', volume: z.volume || '', volume_max: z.volume_max == null ? null : z.volume_max,
         volume_start: z.volume_start == null ? null : z.volume_start,
         turn_off: b.turn_off || '', unjoin: b.unjoin || '',
         joinLeader: (b.join && b.join.leader) || '',
@@ -1982,6 +2055,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       };
       const form = this._form(zSchema, plat, (v) => {
         const zn = { name: v.name, entity: v.entity };
+        if (v.ma_player) zn.ma_player = v.ma_player;
         if (v.icon) zn.icon = v.icon;
         if (v.volume) zn.volume = v.volume;
         if (v.volume_max != null && v.volume_max !== '') zn.volume_max = v.volume_max;
