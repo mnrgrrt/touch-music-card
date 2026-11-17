@@ -46,6 +46,10 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 <img src="images/music-card-portrait.png" alt="The card on a tablet mounted on the wall in portrait" width="420">
 
+**On a phone too.** On a narrow card the player becomes a compact block: a small cover with the title beside it, and the buttons and volume below, so most of the screen is left for your music. With `fill: true` the card ends exactly at the bottom of the screen and the tiles scroll inside it.
+
+<img src="images/music-card-phone.png" alt="The card on a phone" width="320">
+
 **Light or dark from the theme it sits in.** The card measures the background its own theme gives it, not the operating system's preference. A view can carry a theme of its own, so a light dashboard on a laptop set to dark mode still gets dark text.
 
 **A form for everything.** Speakers, categories, tiles, navigation buttons: all of it from the dashboard editor, no YAML needed. The code editor keeps working and stays authoritative for keys the form does not know about.
