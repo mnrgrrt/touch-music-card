@@ -1,0 +1,44 @@
+name: Build
+
+# Rebuilds touch-music-card.js (the file HACS installs) from src/ and
+# translations/. On a pull request it only checks; after a push to main it
+# commits the rebuilt file, so contributors never have to run the build.
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "translations/**", "build.mjs"]
+  pull_request:
+    paths: ["src/**", "translations/**", "build.mjs"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check translations
+        if: github.event_name == 'pull_request'
+        run: node build.mjs --check
+
+      - name: Build and commit
+        if: github.event_name != 'pull_request'
+        run: |
+          node build.mjs
+          node --check touch-music-card.js
+          if git diff --quiet touch-music-card.js; then
+            echo "touch-music-card.js is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add touch-music-card.js
+          git commit -m "Build touch-music-card.js"
+          git push
