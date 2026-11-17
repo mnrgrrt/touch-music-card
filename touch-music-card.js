@@ -1936,7 +1936,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     pos = Math.max(0, Math.min(duur, pos));
     fill.style.width = (pos / duur * 100) + '%';
     const nu = sr.getElementById('vnu');
-    if (nu) nu.textContent = mmss(Math.round(pos));
+    if (nu) nu.textContent = mmss(Math.round(pos)) || '0:00';
   }
 
   disconnectedCallback() {
