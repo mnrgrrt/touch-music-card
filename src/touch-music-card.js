@@ -22,7 +22,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.6.0';
+const VERSIE = '2.6.1';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -410,7 +410,31 @@ ha-icon { pointer-events:none; }
           min-height:var(--mc-h,556px); row-gap:14px; padding:14px; }
   .scheiding { display:none; }
   .right { min-height:340px; }
-  .np .art, .np .leegart { width:132px; height:132px; }
+  /* On a phone the player is a compact block: a small cover with the title
+     beside it, then bar, buttons and volume. A big cover here left room for
+     one row of tiles and nothing more. */
+  .np { flex:0 0 auto; display:grid; grid-template-columns:84px minmax(0,1fr);
+        column-gap:14px; align-items:center; text-align:left; padding:4px 0 0; }
+  .np .art, .np .leegart { grid-column:1; grid-row:1; width:84px; height:84px; border-radius:10px; }
+  .np .leegart ha-icon { --mdc-icon-size:34px; }
+  .np .glow { grid-column:1; grid-row:1; left:42px; top:-4px; width:92px; height:92px; }
+  .np .tx { grid-column:2; grid-row:1; padding-top:0; min-width:0; }
+  .np .t { font-size:15.5px; }
+  .np .a { font-size:12.5px; margin-top:3px; }
+  .np .op { margin-top:4px; }
+  .np .voort { grid-column:1 / -1; padding-top:12px; }
+  .np .ctr { grid-column:1 / -1; justify-content:space-between; gap:0; margin-top:8px; padding:0 4px; }
+  .np .ctr button { width:40px; height:40px; }
+  .np .ctr ha-icon { --mdc-icon-size:24px; }
+  .np .ctr button.shuf ha-icon, .np .ctr button.rep ha-icon { --mdc-icon-size:20px; }
+  .np .ctr button.hoofd { width:52px; height:52px; }
+  .np .ctr button.hoofd ha-icon { --mdc-icon-size:28px; }
+  .volrow { margin-top:8px; }
+  #melding:empty { min-height:0; padding:0; }
+  /* Narrow, standing and filling the screen: the card is exactly as high as
+     the screen below it, and the tiles get what the player leaves over. */
+  .wrap.staand { grid-template-rows:auto auto; }
+  .wrap.staand.vul { height:var(--mc-h); grid-template-rows:auto minmax(340px,1fr); }
 }
 `;
 
@@ -1320,6 +1344,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     wrap.classList.toggle('staand', this._staand());
     wrap.classList.toggle('geenvol', this._cfg.show_volume === false);
     wrap.classList.toggle('eenzone', this._zoneLijst().length <= 1);
+    wrap.classList.toggle('vul', this._cfg.fill === true);
     this._tegelSleutel = null;
   }
 
