@@ -38,7 +38,7 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 **Covers that do not go stale.** A tile does not need an image URL. The card asks Music Assistant what the cover is now, so a playlist that changes its artwork changes on the card too. Pin an `image:` only when you want a particular one.
 
-**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY, AZERTY or ABC. Results drill down: an album opens its tracks, an artist opens their albums.
+**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY, AZERTY, Norwegian QWERTY (ÆØÅ) or ABC. Results drill down: an album opens its tracks, an artist opens their albums.
 
 ![Searching, in a light theme](images/music-card-search-light.png)
 
@@ -173,18 +173,22 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `links` | — | Navigation buttons to other dashboard views. |
 | `height` | `556` | Fixed height in pixels. |
 | `fill` | `false` | Work out the height from the space available instead. |
+| `layout` | `auto` | `auto` puts the player on top as soon as the screen stands upright (portrait), `columns` always keeps the two columns, `stacked` always puts the player on top. For a portrait kiosk, combine it with `fill: true`. |
 | `fill_margin` | `8` | Space to leave at the bottom when filling. |
 | `volume_max` | `100` | The end of the slider, in percent. |
 | `volume_start` | — | Drop back to this percentage when starting above `volume_max`. Leave it out and the card never touches your volume on its own. |
+| `show_volume` | `true` | Set to `false` to hide the volume control, for example when the volume lives on an amplifier or a remote. |
+
+With a single speaker the card leaves out the speaker switcher: there is nothing to switch between.
 | `limit` | `24` | Search results per type. |
 | `search_types` | all four | Which of track, album, artist, playlist can be searched. |
 | `tile_action` | `open` | `open` shows a tile's tracks, `play` starts it straight away. |
 | `keyboard` | `true` | The on-screen keyboard. Set `false` on a phone or PC to use a normal text field. |
-| `keyboard_layout` | `qwerty` | Letter layout of the on-screen keyboard: `qwerty`, `azerty` or `abc` (alphabetical). |
+| `keyboard_layout` | `qwerty` | Letter layout of the on-screen keyboard: `qwerty`, `azerty`, `nb` (Norwegian, with Æ Ø Å) or `abc` (alphabetical). |
 | `arrows` | `true` | Scroll buttons beside the lists, for panels without a scrollbar. |
 | `transfer_on_switch` | `true` | Move the queue along when you switch speaker. `false` switches the view only. |
 | `retry_next` | `true` | Re-send a skip if nothing happens, which Chromecast players sometimes need. |
-| `language` | follows HA | `nl` or `en`. |
+| `language` | follows HA | A language from [translations](translations/), for example `en` or `nl`. A string that is not translated yet shows in English. |
 
 ### Zone
 
@@ -193,7 +197,7 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `name` | — | The label on the button. |
 | `entity` | — | A Music Assistant `media_player`, a single speaker or a group. Not the speaker's own entity from Cast, DLNA or Sonos: that one only gets a bare stream from Music Assistant, with the stream URL as title and no working buttons. The card swaps such an entity for the Music Assistant player with the same name, or tells you it gets no track info. See *Speakers that Music Assistant reaches through Home Assistant* below. |
 | `icon` | — | One of the card's built-in icons, or an `mdi:` name. |
-| `volume` | `entity` | Send volume to a different entity than the one that plays. |
+| `volume` | `entity` | Send volume to a different entity than the one that plays: another media player, or an `input_number` or `number` (an amplifier, a DSP). For a number the card maps the slider onto its own min and max. |
 | `volume_max` | inherits | Override the slider range for this zone. |
 | `volume_start` | inherits | Override the fallback volume for this zone. |
 | `before` | — | Switch a group off, detach speakers, or join them together before playing here. |
@@ -287,7 +291,17 @@ I would really like to hear what you think of it. Are you using it, and on what?
 
 Be aware that I do not maintain it actively. I work on it now and then when I have time, so an answer or a fix can take a while. Pull requests are welcome and I will look at them, and you are free to fork it and make it your own without asking.
 
-It is one file with no build step — no npm, no bundler, no TypeScript. Open it in an editor and change what you want. That is deliberate.
+What you install is still one file. The source is kept almost the same way: `src/touch-music-card.js` holds all the code, and only the interface texts live apart in `translations/`, one JSON file per language. A tiny script, `build.mjs`, puts them together into `touch-music-card.js`. It needs nothing but Node — no npm packages, no bundler, no TypeScript — and a GitHub Action runs it on every push, so you never have to. Do not edit `touch-music-card.js` in the root directly: your change would be overwritten on the next build.
+
+## Translations
+
+The card speaks English and Dutch. Adding your language is welcome and needs no code:
+
+1. Copy `translations/en.json` to `translations/<code>.json`, using the two-letter code Home Assistant uses for your language (`nb` for Norwegian Bokmål, `de` for German, and so on).
+2. Set `languageName` to the name of the language in that language, and translate the texts on the right of each `:`. Leave the names on the left as they are.
+3. Open a pull request.
+
+You do not have to translate everything at once. Anything you leave out shows in English, and the check on your pull request lists what is still missing. The card picks the language of Home Assistant by itself, or the one you set with `language:`.
 
 ## How this was built
 

@@ -1,3 +1,6 @@
+// GENERATED FILE - do not edit. Edit src/touch-music-card.js and translations/*.json,
+// then run `node build.mjs` (a GitHub Action does this on every push to main).
+
 // touch-music-card
 //
 // One Lovelace card for Music Assistant, built for touch panels and Google Nest
@@ -22,7 +25,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.4.8';
+const VERSIE = '2.6.0';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -77,105 +80,211 @@ const SOORTEN = [
   { key: 'playlist', lijst: false, veld: 'playlists' },
 ];
 
-// Interface strings. The card picks the language of Home Assistant, or the
-// one set with `language:` in the card config. Adding a language = copying
-// one block below and translating it.
+// Interface strings. They live in translations/<language>.json and build.mjs
+// puts them in here when the release file is made. The card picks the language
+// of Home Assistant, or the one set with `language:` in the card config.
+// A missing string falls back to English.
 const TAAL = {
-  en: {
-    soort: { track: 'Tracks', album: 'Albums', artist: 'Artists', playlist: 'Playlists', radio: 'Radio stations' },
-    zoeken: 'Search artist, album or track',
-    toetsen: 'KEYS', verberg: 'HIDE', zoek: 'SEARCH',
-    wissen: 'Clear', spatie: 'space',
-    bezigZoeken: 'Searching...', geenResultaat: 'No results.',
-    geenCats: 'No categories configured.',
-    terug: 'Back', resultaten: 'Results', speelAlles: 'Play all',
-    bezigOphalen: 'Loading...', geenNummers: 'No tracks found.',
-    nummer: 'track', nummers: 'tracks', uur: 'h', minuut: 'min',
-    stil: 'Nothing playing', geenSpeler: 'Player not found',
-    nietMA: 'No track info from Music Assistant',
-    nietMAuitleg: 'This speaker reaches Music Assistant through Home Assistant. See the README.',
-    speeltOp: 'playing on', shuffleTitel: 'Shuffle', herhaalTitel: 'Repeat',
-    ed: {
-      algemeen: 'General', zones: 'Speakers', cats: 'Categories', links: 'Navigation buttons',
-      config_entry_id: 'Music Assistant', height: 'Card height (pixels)',
-      fill: 'Fill the screen below the card (ignores the height above)',
-      fill_margin: 'Space at the bottom when filling (px)',
-      volume_max: 'Maximum volume (%, also the end of the slider)',
-      volume_start: 'Drop back to (%) when starting above that maximum',
-      language: 'Language', limit: 'Search results per type',
-      search_types: 'Searchable', tile_action: 'Tapping a tile',
-      keyboard: 'On-screen keyboard', keyboard_layout: 'Keyboard layout', arrows: 'Scroll buttons next to lists',
-      transfer_on_switch: 'Move the queue when switching speaker',
-      retry_next: 'Re-send skip if nothing happens (Chromecast)',
-      automatisch: 'Follow Home Assistant', openen: 'Show its tracks', afspelen: 'Play it',
-      naam: 'Name', entity: 'Player', volume: 'Volume goes to (optional)', icon: 'Icon',
-      turn_off: 'First switch off (optional)', unjoin: 'First detach (optional)',
-      joinLeader: 'First group onto (optional)', joinMembers: 'these speakers',
-      uri: 'Media id', image: 'Cover image URL (optional)',
-      uriHint: 'A Music Assistant media id, for example library://playlist/65. '
-        + 'Developer tools > Actions > "Music Assistant: Search" returns the id of '
-        + 'anything you search for - see the README.',
-      play: 'Play straight away', radio: 'Radio mode',
-      pad: 'Dashboard path', tegels: 'Tiles',
-      zoneToe: 'Add speaker', catToe: 'Add category', tegelToe: 'Add tile', linkToe: 'Add button',
-      weg: 'Remove', naamloos: 'Unnamed',
-      weergave: 'Display', spelenKop: 'Playing', zoekKop: 'Search',
-      vullen: 'Tiles come from', bronHand: 'A list I make myself',
-      bronAuto: 'Music Assistant fills it',
-      media_type: 'What kind', order_by: 'Order', favorite: 'Favourites only',
-      aantal: 'How many tiles', autoTegels: 'filled by Music Assistant',
-      ordStandaard: 'Library order', ordRecent: 'Recently played',
-      ordNieuw: 'Recently added', ordRandom: 'Random',
+  "en": {
+    "languageName": "English",
+    "types": {
+      "track": "Tracks",
+      "album": "Albums",
+      "artist": "Artists",
+      "playlist": "Playlists",
+      "radio": "Radio stations"
     },
+    "searchPlaceholder": "Search artist, album or track",
+    "showKeys": "KEYS",
+    "hideKeys": "HIDE",
+    "search": "SEARCH",
+    "clear": "Clear",
+    "space": "space",
+    "searching": "Searching...",
+    "noResults": "No results.",
+    "noCategories": "No categories configured.",
+    "back": "Back",
+    "results": "Results",
+    "playAll": "Play all",
+    "loading": "Loading...",
+    "noTracks": "No tracks found.",
+    "track": "track",
+    "tracks": "tracks",
+    "hours": "h",
+    "minutes": "min",
+    "nothingPlaying": "Nothing playing",
+    "playerNotFound": "Player not found",
+    "noMaInfo": "No track info from Music Assistant",
+    "noMaInfoHelp": "This speaker reaches Music Assistant through Home Assistant. See the README.",
+    "playingOn": "playing on",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "editor": {
+      "general": "General",
+      "speakers": "Speakers",
+      "categories": "Categories",
+      "navigation": "Navigation buttons",
+      "config_entry_id": "Music Assistant",
+      "height": "Card height (pixels)",
+      "fill": "Fill the screen below the card (ignores the height above)",
+      "fill_margin": "Space at the bottom when filling (px)",
+      "volume_max": "Maximum volume (%, also the end of the slider)",
+      "volume_start": "Drop back to (%) when starting above that maximum",
+      "language": "Language",
+      "limit": "Search results per type",
+      "search_types": "Searchable",
+      "tile_action": "Tapping a tile",
+      "keyboard": "On-screen keyboard",
+      "keyboard_layout": "Keyboard layout",
+      "arrows": "Scroll buttons next to lists",
+      "transfer_on_switch": "Move the queue when switching speaker",
+      "retry_next": "Re-send skip if nothing happens (Chromecast)",
+      "followHa": "Follow Home Assistant",
+      "showTracks": "Show its tracks",
+      "playIt": "Play it",
+      "name": "Name",
+      "entity": "Player",
+      "volume": "Volume goes to (optional: player, input_number or number)",
+      "icon": "Icon",
+      "turn_off": "First switch off (optional)",
+      "unjoin": "First detach (optional)",
+      "joinLeader": "First group onto (optional)",
+      "joinMembers": "these speakers",
+      "uri": "Media id",
+      "image": "Cover image URL (optional)",
+      "uriHint": "A Music Assistant media id, for example library://playlist/65. Developer tools > Actions > \"Music Assistant: Search\" returns the id of anything you search for - see the README.",
+      "play": "Play straight away",
+      "radio": "Radio mode",
+      "path": "Dashboard path",
+      "tiles": "Tiles",
+      "addSpeaker": "Add speaker",
+      "addCategory": "Add category",
+      "addTile": "Add tile",
+      "addButton": "Add button",
+      "remove": "Remove",
+      "unnamed": "Unnamed",
+      "display": "Display",
+      "playingHeader": "Playing",
+      "searchHeader": "Search",
+      "tilesFrom": "Tiles come from",
+      "sourceManual": "A list I make myself",
+      "sourceAuto": "Music Assistant fills it",
+      "media_type": "What kind",
+      "order_by": "Order",
+      "favorite": "Favourites only",
+      "count": "How many tiles",
+      "autoTiles": "filled by Music Assistant",
+      "orderDefault": "Library order",
+      "orderRecent": "Recently played",
+      "orderNew": "Recently added",
+      "orderRandom": "Random",
+      "layout": "Layout",
+      "layoutAuto": "Automatic: player on top when the screen stands upright",
+      "layoutColumns": "Always two columns",
+      "layoutStacked": "Always player on top",
+      "show_volume": "Show volume control"
+    }
   },
-  nl: {
-    soort: { track: 'Nummers', album: 'Albums', artist: 'Artiesten', playlist: 'Playlists', radio: 'Radiozenders' },
-    zoeken: 'Zoek artiest, album of nummer',
-    toetsen: 'TOETSEN', verberg: 'VERBERG', zoek: 'ZOEK',
-    wissen: 'Wissen', spatie: 'spatie',
-    bezigZoeken: 'Bezig met zoeken...', geenResultaat: 'Geen resultaten.',
-    geenCats: 'Geen categorieen ingesteld.',
-    terug: 'Terug', resultaten: 'Resultaten', speelAlles: 'Speel alles',
-    bezigOphalen: 'Bezig met ophalen...', geenNummers: 'Geen nummers gevonden.',
-    nummer: 'nummer', nummers: 'nummers', uur: 'u', minuut: 'min',
-    stil: 'Niets aan het spelen', geenSpeler: 'Speler niet gevonden',
-    nietMA: 'Geen nummerinfo van Music Assistant',
-    nietMAuitleg: 'Deze speaker komt via Home Assistant in Music Assistant. Zie de README.',
-    speeltOp: 'speelt op', shuffleTitel: 'Willekeurige volgorde', herhaalTitel: 'Herhalen',
-    ed: {
-      algemeen: 'Algemeen', zones: 'Speakers', cats: 'Categorieen', links: 'Navigatieknoppen',
-      config_entry_id: 'Music Assistant', height: 'Hoogte van de kaart (pixels)',
-      fill: 'Vult het scherm onder de kaart (hoogte hierboven vervalt dan)',
-      fill_margin: 'Ruimte onderaan bij vullen (px)',
-      volume_max: 'Maximum volume (%, tevens einde van de schuif)',
-      volume_start: 'Bij starten terugzetten naar (%) als het daarboven staat',
-      language: 'Taal', limit: 'Zoekresultaten per soort',
-      search_types: 'Waarop zoeken', tile_action: 'Tegel aantikken',
-      keyboard: 'Schermtoetsenbord', keyboard_layout: 'Toetsenbordindeling', arrows: 'Scrolknoppen naast lijsten',
-      transfer_on_switch: 'Muziek meenemen bij wisselen van speaker',
-      retry_next: 'Doorspoelen opnieuw sturen als er niets gebeurt (Chromecast)',
-      automatisch: 'Die van Home Assistant', openen: 'Nummers tonen', afspelen: 'Meteen afspelen',
-      naam: 'Naam', entity: 'Speler', volume: 'Volume gaat naar (optioneel)', icon: 'Icoon',
-      turn_off: 'Eerst uitzetten (optioneel)', unjoin: 'Eerst loskoppelen (optioneel)',
-      joinLeader: 'Eerst groeperen op (optioneel)', joinMembers: 'met deze speakers',
-      uri: 'Media-id', image: 'Afbeelding-URL (optioneel)',
-      uriHint: 'Een Music Assistant media-id, bijvoorbeeld library://playlist/65. '
-        + 'Ontwikkelhulpmiddelen > Acties > "Music Assistant: Search" geeft het id '
-        + 'van alles wat je zoekt - zie de README.',
-      play: 'Meteen afspelen', radio: 'Radiomodus',
-      pad: 'Pad naar weergave', tegels: 'Tegels',
-      zoneToe: 'Speaker toevoegen', catToe: 'Categorie toevoegen',
-      tegelToe: 'Tegel toevoegen', linkToe: 'Knop toevoegen',
-      weg: 'Verwijderen', naamloos: 'Naamloos',
-      weergave: 'Weergave', spelenKop: 'Afspelen', zoekKop: 'Zoeken',
-      vullen: 'Tegels komen uit', bronHand: 'Een lijst die ik zelf maak',
-      bronAuto: 'Music Assistant vult hem',
-      media_type: 'Wat voor soort', order_by: 'Volgorde', favorite: 'Alleen favorieten',
-      aantal: 'Hoeveel tegels', autoTegels: 'gevuld door Music Assistant',
-      ordStandaard: 'Volgorde van de bibliotheek', ordRecent: 'Onlangs gespeeld',
-      ordNieuw: 'Onlangs toegevoegd', ordRandom: 'Willekeurig',
+  "nl": {
+    "languageName": "Nederlands",
+    "types": {
+      "track": "Nummers",
+      "album": "Albums",
+      "artist": "Artiesten",
+      "playlist": "Playlists",
+      "radio": "Radiozenders"
     },
-  },
+    "searchPlaceholder": "Zoek artiest, album of nummer",
+    "showKeys": "TOETSEN",
+    "hideKeys": "VERBERG",
+    "search": "ZOEK",
+    "clear": "Wissen",
+    "space": "spatie",
+    "searching": "Bezig met zoeken...",
+    "noResults": "Geen resultaten.",
+    "noCategories": "Geen categorieen ingesteld.",
+    "back": "Terug",
+    "results": "Resultaten",
+    "playAll": "Speel alles",
+    "loading": "Bezig met ophalen...",
+    "noTracks": "Geen nummers gevonden.",
+    "track": "nummer",
+    "tracks": "nummers",
+    "hours": "u",
+    "minutes": "min",
+    "nothingPlaying": "Niets aan het spelen",
+    "playerNotFound": "Speler niet gevonden",
+    "noMaInfo": "Geen nummerinfo van Music Assistant",
+    "noMaInfoHelp": "Deze speaker komt via Home Assistant in Music Assistant. Zie de README.",
+    "playingOn": "speelt op",
+    "shuffle": "Willekeurige volgorde",
+    "repeat": "Herhalen",
+    "editor": {
+      "general": "Algemeen",
+      "speakers": "Speakers",
+      "categories": "Categorieen",
+      "navigation": "Navigatieknoppen",
+      "config_entry_id": "Music Assistant",
+      "height": "Hoogte van de kaart (pixels)",
+      "fill": "Vult het scherm onder de kaart (hoogte hierboven vervalt dan)",
+      "fill_margin": "Ruimte onderaan bij vullen (px)",
+      "volume_max": "Maximum volume (%, tevens einde van de schuif)",
+      "volume_start": "Bij starten terugzetten naar (%) als het daarboven staat",
+      "language": "Taal",
+      "limit": "Zoekresultaten per soort",
+      "search_types": "Waarop zoeken",
+      "tile_action": "Tegel aantikken",
+      "keyboard": "Schermtoetsenbord",
+      "keyboard_layout": "Toetsenbordindeling",
+      "arrows": "Scrolknoppen naast lijsten",
+      "transfer_on_switch": "Muziek meenemen bij wisselen van speaker",
+      "retry_next": "Doorspoelen opnieuw sturen als er niets gebeurt (Chromecast)",
+      "followHa": "Die van Home Assistant",
+      "showTracks": "Nummers tonen",
+      "playIt": "Meteen afspelen",
+      "name": "Naam",
+      "entity": "Speler",
+      "volume": "Volume gaat naar (optioneel: speler, input_number of number)",
+      "icon": "Icoon",
+      "turn_off": "Eerst uitzetten (optioneel)",
+      "unjoin": "Eerst loskoppelen (optioneel)",
+      "joinLeader": "Eerst groeperen op (optioneel)",
+      "joinMembers": "met deze speakers",
+      "uri": "Media-id",
+      "image": "Afbeelding-URL (optioneel)",
+      "uriHint": "Een Music Assistant media-id, bijvoorbeeld library://playlist/65. Ontwikkelhulpmiddelen > Acties > \"Music Assistant: Search\" geeft het id van alles wat je zoekt - zie de README.",
+      "play": "Meteen afspelen",
+      "radio": "Radiomodus",
+      "path": "Pad naar weergave",
+      "tiles": "Tegels",
+      "addSpeaker": "Speaker toevoegen",
+      "addCategory": "Categorie toevoegen",
+      "addTile": "Tegel toevoegen",
+      "addButton": "Knop toevoegen",
+      "remove": "Verwijderen",
+      "unnamed": "Naamloos",
+      "display": "Weergave",
+      "playingHeader": "Afspelen",
+      "searchHeader": "Zoeken",
+      "tilesFrom": "Tegels komen uit",
+      "sourceManual": "Een lijst die ik zelf maak",
+      "sourceAuto": "Music Assistant vult hem",
+      "media_type": "Wat voor soort",
+      "order_by": "Volgorde",
+      "favorite": "Alleen favorieten",
+      "count": "Hoeveel tegels",
+      "autoTiles": "gevuld door Music Assistant",
+      "orderDefault": "Volgorde van de bibliotheek",
+      "orderRecent": "Onlangs gespeeld",
+      "orderNew": "Onlangs toegevoegd",
+      "orderRandom": "Willekeurig",
+      "layout": "Indeling",
+      "layoutAuto": "Automatisch: speler bovenaan als het scherm staat",
+      "layoutColumns": "Altijd twee kolommen",
+      "layoutStacked": "Altijd speler bovenaan",
+      "show_volume": "Volumeregeling tonen"
+    }
+  }
 };
 
 // Letter rows of the on-screen keyboard. `keyboard_layout:` picks one; QWERTY is
@@ -183,6 +292,7 @@ const TAAL = {
 const LAYOUTS = {
   qwerty: ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'],
   azerty: ['azertyuiop', 'qsdfghjklm', 'wxcvbn'],
+  nb: ['qwertyuiopå', 'asdfghjkløæ', 'zxcvbnm'],
   abc: ['abcdefghij', 'klmnopqrs', 'tuvwxyz'],
 };
 
@@ -285,6 +395,8 @@ ha-icon { pointer-events:none; }
                 background:var(--primary-text-color,#fff);
                 box-shadow:0 1px 3px rgba(0,0,0,.35); margin-left:-7px; }
 
+/* Tiles: as many columns as fit, at least 130px each. A wider card gets more
+   covers next to each other instead of wider gaps. 1024x600 still gives four. */
 /* tabs: onderstreping in plaats van pillen */
 .chips { display:flex; gap:20px; flex-wrap:nowrap; min-width:0; max-width:100%;
          border-bottom:1px solid var(--line); flex:0 0 auto; overflow:hidden; }
@@ -296,7 +408,7 @@ ha-icon { pointer-events:none; }
 .chips button.zoektab ha-icon { --mdc-icon-size:19px; }
 
 .tiles { min-height:0; max-width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display:grid;
-         grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px 12px; align-content:start;
+         grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:11px 12px; align-content:start;
          padding-top:2px; scrollbar-width:none; }
 .tiles::-webkit-scrollbar { display:none; }
 .tile { display:flex; flex-direction:column; align-items:center; min-width:0; max-width:100%; }
@@ -387,14 +499,13 @@ ha-icon { pointer-events:none; }
    pane of the card editor. Zonder dit wordt de rechterkolom onleesbaar smal. */
 @container (max-width: 940px) {
   .wrap { grid-template-columns:250px 1px minmax(0,1fr); gap:14px; padding:14px; }
-  .tiles { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px 10px; }
+  .tiles { gap:12px 10px; }
   .np .art, .np .leegart { width:140px; height:140px; }
   .np .glow { width:150px; height:150px; }
   .chips { gap:14px; }
 }
 @container (max-width: 780px) {
   .wrap { grid-template-columns:210px 1px minmax(0,1fr); }
-  .tiles { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .np .art, .np .leegart { width:118px; height:118px; }
   .np .ctr { gap:8px; }
   .kbd button { height:38px; font-size:15px; }
@@ -426,6 +537,78 @@ ha-icon { pointer-events:none; }
 /* Genuinely narrow - a phone in portrait, or a one-column dashboard. Two
    columns stop being readable here, so stack them. Never hide one: on the
    card's own dashboard that half is the reason the card exists. */
+/* Standing screens (layout: stacked, or auto on a portrait screen): the player
+   goes on top as one wide row - cover left, title and buttons beside it - and
+   tiles and search get the rest of the height below. */
+.wrap.staand { grid-template-columns:minmax(0,1fr); grid-template-rows:auto 1px minmax(0,1fr);
+               row-gap:14px; }
+.wrap.staand .np { flex:0 0 auto; }
+/* No line above the navigation buttons: the divider below the player already separates. */
+.wrap.staand .links { border-top:0; margin-top:4px; }
+/* 576 = the 480px player block plus the two times beside the progress bar, so
+   speakers, bar, buttons and volume all share the same edges. */
+.wrap.staand .left { width:100%; max-width:576px; justify-self:center; }
+.wrap.staand .scrollbox { margin-top:14px; }
+@container (min-width: 401px) {
+  /* A fixed block, as wide as the progress bar: the cover always sits at its
+     left edge, right above the start of the bar, and the text fills the rest.
+     The two times hang just outside the block, on either side of the bar. */
+  .wrap.staand .np { display:grid; grid-template-columns:150px minmax(0,1fr);
+                     column-gap:24px; align-items:center; text-align:left;
+                     width:min(480px, calc(100% - 96px)); justify-self:center;
+                     align-self:center; margin:0 auto; padding:10px 0 4px; }
+  .wrap.staand .np .art, .wrap.staand .np .leegart { grid-column:1; grid-row:1;
+                     width:150px; height:150px; }
+  .wrap.staand .np .glow { grid-column:1; grid-row:1; left:75px; top:-5px;
+                     width:160px; height:160px; }
+  .wrap.staand .np .tx { grid-column:2; grid-row:1; padding-top:0; min-width:0; }
+  .wrap.staand .np .t { font-size:22px; white-space:normal; display:-webkit-box;
+                        -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .wrap.staand .np .a { font-size:15px; margin-top:6px; white-space:normal; }
+  .wrap.staand .np .a .sep { display:none; }
+  .wrap.staand .np .a .d0, .wrap.staand .np .a .d1 { display:block; white-space:nowrap;
+                     overflow:hidden; text-overflow:ellipsis; }
+  .wrap.staand .np .a .d1 { margin-top:3px; }
+  .wrap.staand .np .voort { grid-column:1 / -1; padding-top:18px; display:grid;
+                     width:calc(100% + 96px); margin:0 -48px; padding-left:0; padding-right:0;
+                     grid-template-columns:36px minmax(0,1fr) 36px; align-items:center;
+                     column-gap:12px; }
+  .wrap.staand .np .vtijd { display:contents; font-size:11.5px; }
+  .wrap.staand .np .vtijd span { grid-row:1; color:var(--flauw);
+                     font-variant-numeric:tabular-nums; font-size:11.5px; }
+  .wrap.staand .np .vtijd span:first-child { grid-column:1; text-align:right; }
+  .wrap.staand .np .vtijd span:last-child { grid-column:3; }
+  .wrap.staand .np .vbaan { grid-column:2; grid-row:1; }
+  /* Buttons spread over the block: shuffle under the cover's left edge, repeat
+     under the right edge of the text. They carry the line when a radio stream
+     has no progress bar. */
+  .wrap.staand .np .ctr { grid-column:1 / -1; justify-content:space-between; gap:0;
+                     margin-top:14px; }
+  .wrap.staand .np .ctr button { width:48px; height:48px; }
+  .wrap.staand .np .ctr ha-icon { --mdc-icon-size:34px; }
+  .wrap.staand .np .ctr button.shuf ha-icon, .wrap.staand .np .ctr button.rep ha-icon { --mdc-icon-size:28px; }
+  .wrap.staand .np .ctr button.hoofd { width:68px; height:68px; }
+  .wrap.staand .np .ctr button.hoofd ha-icon { --mdc-icon-size:36px; }
+  .wrap.staand .chips { justify-content:center; }
+  .wrap.staand .chips button.zoektab { margin-left:0; }
+}
+/* Stacked: minus, slider and plus on exactly the columns of the progress bar
+   above, so both bars start and end at the same place. The percentage hangs
+   outside, like the times; on a narrow card it stays in the row. */
+.wrap.staand .volrow { display:grid; grid-template-columns:36px minmax(0,1fr) 36px;
+                       column-gap:12px; position:relative; }
+.wrap.staand .volrow > button.vk { justify-self:center; }
+.wrap.staand .volrow > button.slider { width:100%; }
+.wrap.staand .volrow .vollbl { position:absolute; left:100%; top:50%; margin-left:6px;
+                       transform:translateY(-50%); text-align:left; }
+@container (max-width: 700px) {
+  .wrap.staand .volrow { grid-template-columns:36px minmax(0,1fr) 36px auto; }
+  .wrap.staand .volrow .vollbl { position:static; transform:none; margin-left:0; }
+}
+.wrap.geenvol .volrow { display:none; }
+/* One speaker: a switcher with one button chooses nothing, so leave it out. */
+.wrap.eenzone .zones { display:none; }
+
 @container (max-width: 400px) {
   .wrap { grid-template-columns:minmax(0,1fr); height:auto;
           min-height:var(--mc-h,556px); row-gap:14px; padding:14px; }
@@ -707,6 +890,44 @@ class MusicAssistantTouchCard extends HTMLElement {
   _speler() { return this._maSpeler(this._zoneCfg().entity).ent; }
   _volEntity() { return this._zoneCfg().volume || this._speler(); }
 
+  // Volume as a fraction 0..1, whatever holds it. A media_player has
+  // volume_level; an input_number or number (an amplifier, a DSP) has a value
+  // between its own min and max.
+  _volGetal(ent) { return /^(input_number|number)\./.test(ent || ''); }
+
+  _volBereik(vs) {
+    const a = (vs && vs.attributes) || {};
+    const min = a.min != null ? Number(a.min) : 0;
+    const max = a.max != null ? Number(a.max) : 100;
+    return { min, max: max > min ? max : min + 1, step: Number(a.step) > 0 ? Number(a.step) : 1 };
+  }
+
+  _volNu() {
+    const ent = this._volEntity();
+    const vs = this._st(ent);
+    if (!vs) return null;
+    if (this._volGetal(ent)) {
+      const v = parseFloat(vs.state);
+      if (Number.isNaN(v)) return null;
+      const b = this._volBereik(vs);
+      return Math.max(0, Math.min(1, (v - b.min) / (b.max - b.min)));
+    }
+    return vs.attributes.volume_level != null ? vs.attributes.volume_level : null;
+  }
+
+  _volZet(f) {
+    const ent = this._volEntity();
+    f = Math.max(0, Math.min(1, f));
+    if (this._volGetal(ent)) {
+      const b = this._volBereik(this._st(ent));
+      let v = b.min + f * (b.max - b.min);
+      v = Math.round(v / b.step) * b.step;
+      v = Math.max(b.min, Math.min(b.max, Number(v.toFixed(6))));
+      return this._call(ent.split('.')[0], 'set_value', { value: v }, { entity_id: ent });
+    }
+    return this._call('media_player', 'volume_set', { volume_level: f }, { entity_id: ent });
+  }
+
   // A zone has to be the media_player that Music Assistant itself creates. A
   // speaker usually also has its own entity from its own integration (Cast,
   // DLNA, Sonos, ...). Point a zone at that one and Music Assistant only hands
@@ -795,21 +1016,22 @@ class MusicAssistantTouchCard extends HTMLElement {
   async _startVolume() {
     const p = this._volStart();
     if (p == null) return;
-    const vs = this._st(this._volEntity());
-    const nu = (vs && vs.attributes.volume_level != null)
-      ? vs.attributes.volume_level * 100 : null;
+    const f = this._volNu();
+    const nu = f == null ? null : f * 100;
     if (nu == null || nu <= this._volMax()) return;
-    await this._call('media_player', 'volume_set',
-      { volume_level: p / 100 }, { entity_id: this._volEntity() }).catch(() => {});
+    await this._volZet(p / 100).catch(() => {});
   }
 
   _volStap(richting) {
-    const stap = Math.max(0.01, this._volMax() / 100 / 20);
-    const vs = this._st(this._volEntity());
-    const nu = (vs && vs.attributes.volume_level) || 0;
-    const doel = Math.max(0, Math.min(1, nu + richting * stap));
-    this._call('media_player', 'volume_set',
-      { volume_level: doel }, { entity_id: this._volEntity() });
+    let stap = Math.max(0.01, this._volMax() / 100 / 20);
+    const ent = this._volEntity();
+    if (this._volGetal(ent)) {
+      // never a step smaller than the number allows, or a press does nothing
+      const b = this._volBereik(this._st(ent));
+      stap = Math.max(stap, b.step / (b.max - b.min));
+    }
+    const nu = this._volNu() || 0;
+    this._volZet(nu + richting * stap);
   }
 
   async _ws(msg) { return this._hass.connection.sendMessagePromise(msg); }
@@ -1098,7 +1320,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     else if (t === 'SP') this._q += ' ';
     else this._q += t;
     const q = this.shadowRoot.getElementById('qtekst');
-    if (q) q.innerHTML = this._q ? esc(this._q) : `<i>${esc(this._taal().zoeken)}</i>`;
+    if (q) q.innerHTML = this._q ? esc(this._q) : `<i>${esc(this._taal().searchPlaceholder)}</i>`;
   }
 
   // ---------- opbouw ----------
@@ -1127,15 +1349,23 @@ class MusicAssistantTouchCard extends HTMLElement {
         <div class="scheiding"></div>
         <div class="col right" id="right"></div>
       </div>`;
+    this._pasLayout();
+    if (!this._staandLuister && window.matchMedia) {
+      this._staandLuister = () => this._pasLayout();
+      window.matchMedia('(orientation: portrait)').addEventListener('change', this._staandLuister);
+    }
     this._tekenZones();
     this._tekenLinks();
     this._tekenRechts();
     clearInterval(this._tikTimer);
     this._tikTimer = setInterval(() => {
-      this._toonVoortgang(); this._vulHoogte(); this._pasTegels(); this._toonRail();
+      this._toonVoortgang(); this._pasTegels(); this._toonRail();
     }, 1000);
     if (vul) {
+      // Measure when the page has settled, not every second: scrolling moves the
+      // card's top, and re-measuring then made the card grow under your finger.
       requestAnimationFrame(() => this._vulHoogte());
+      [400, 1200, 3000].forEach((t) => setTimeout(() => this._vulHoogte(), t));
       if (!this._maatLuister) {
         this._maatLuister = () => this._vulHoogte();
         window.addEventListener('resize', this._maatLuister);
@@ -1210,9 +1440,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     else if (a === 'volset') {
       const r = t.getBoundingClientRect();
       const f = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
-      this._call('media_player', 'volume_set',
-        { volume_level: Math.min(1, f * this._volMax() / 100) },
-        { entity_id: this._volEntity() });
+      this._volZet(Math.min(1, f * this._volMax() / 100));
     }
     else if (a === 'shuffle') {
       const s = this._st(this._actief());
@@ -1281,11 +1509,30 @@ class MusicAssistantTouchCard extends HTMLElement {
   // fill: true -> hoogte = wat er onder de bovenkant van de kaart nog aan
   // scherm over is. Zo staat de kaart overal precies onder de badges/chips
   // zonder dat je per weergave een hoogte hoeft uit te rekenen.
+  // layout: columns (two columns), stacked (player on top), or auto: stacked
+  // when the screen stands upright. Below 400px wide the card stacks anyway.
+  _staand() {
+    const l = this._cfg.layout || 'auto';
+    if (l === 'stacked') return true;
+    if (l === 'columns') return false;
+    return !!(window.matchMedia && window.matchMedia('(orientation: portrait)').matches);
+  }
+
+  _pasLayout() {
+    const wrap = this.shadowRoot && this.shadowRoot.querySelector('.wrap');
+    if (!wrap) return;
+    wrap.classList.toggle('staand', this._staand());
+    wrap.classList.toggle('geenvol', this._cfg.show_volume === false);
+    wrap.classList.toggle('eenzone', this._zoneLijst().length <= 1);
+    this._tegelSleutel = null;
+  }
+
   _vulHoogte() {
     if (this._cfg.fill !== true) return;
     const wrap = this.shadowRoot && this.shadowRoot.querySelector('.wrap');
     if (!wrap || !this.isConnected) return;
-    const boven = this.getBoundingClientRect().top;
+    // Distance from the top of the page, so a scrolled page measures the same.
+    const boven = this.getBoundingClientRect().top + (window.scrollY || 0);
     const marge = this._cfg.fill_margin == null ? 8 : this._cfg.fill_margin;
     const h = Math.max(300, Math.round(window.innerHeight - boven - marge));
     if (h === this._vulH) return;
@@ -1381,14 +1628,14 @@ class MusicAssistantTouchCard extends HTMLElement {
 
   _homeHtml() {
     const cats = this._cats;
-    if (!cats.length) return `<div class="leeg">${this._taal().geenCats}</div>`;
+    if (!cats.length) return `<div class="leeg">${this._taal().noCategories}</div>`;
     const chips = this._tabsHtml(false);
     const cat = cats[this._cat] || {};
     const lijst = this._tegelsVan(cat);
     // A source category has nothing to show until its fetch lands. Say so
     // rather than drawing an empty grid that looks like a broken category.
     if (cat.source && !lijst.length) {
-      return chips + `<div class="leeg">${this._taal().bezigOphalen}</div>`;
+      return chips + `<div class="leeg">${this._taal().loading}</div>`;
     }
     const tiles = lijst.map((t, i) => {
       const b = this._tegelBeeld(t);
@@ -1409,23 +1656,23 @@ class MusicAssistantTouchCard extends HTMLElement {
       `<button class="${!zoekt && i === this._cat ? 'on' : ''}" data-act="cat" data-i="${i}">${esc(c.name)}</button>`).join('');
     return `<div class="chips">${tabs}
       <button class="zoektab${zoekt ? ' on' : ''}" data-act="naarzoek"
-              title="${esc(this._taal().zoek)}">${svg('zoek')}</button></div>`;
+              title="${esc(this._taal().search)}">${svg('zoek')}</button></div>`;
   }
 
   _zoekHtml() {
     const t = this._taal();
     const soorten = (this._cfg.search_types || SOORTEN.map((s) => s.key));
     const chips = SOORTEN.map((s, i) => soorten.includes(s.key)
-      ? `<button class="${i === this._soort ? 'on' : ''}" data-act="soort" data-i="${i}">${esc(t.soort[s.key])}</button>`
+      ? `<button class="${i === this._soort ? 'on' : ''}" data-act="soort" data-i="${i}">${esc(t.types[s.key])}</button>`
       : '').join('');
     const qbar = this._schermtoetsen
       ? `<div class="qbar">${svg('zoek')}
-          <div class="q" id="qtekst">${this._q ? esc(this._q) : `<i>${esc(t.zoeken)}</i>`}</div>
-          <button class="kb" data-act="kbd">${this._kbd ? t.verberg : t.toetsen}</button></div>`
+          <div class="q" id="qtekst">${this._q ? esc(this._q) : `<i>${esc(t.searchPlaceholder)}</i>`}</div>
+          <button class="kb" data-act="kbd">${this._kbd ? t.hideKeys : t.showKeys}</button></div>`
       : `<div class="qbar">${svg('zoek')}
           <input class="q" id="qveld" type="search" autocomplete="off"
-                 placeholder="${esc(t.zoeken)}" value="${esc(this._q)}">
-          <button class="kb" data-act="zoeknu">${t.zoek}</button></div>`;
+                 placeholder="${esc(t.searchPlaceholder)}" value="${esc(this._q)}">
+          <button class="kb" data-act="zoeknu">${t.search}</button></div>`;
     const body = (this._schermtoetsen && this._kbd) ? this._kbdHtml() : this._resHtml();
     return this._tabsHtml(true) + qbar
       + `<div class="chips" style="margin-top:6px">${chips}</div>` + body;
@@ -1440,15 +1687,15 @@ class MusicAssistantTouchCard extends HTMLElement {
       return `<div class="kr">${html}</div>`;
     }).join('');
     const t = this._taal();
-    const onder = `<div class="kr wide">${kn('CLR', t.wissen)}${kn('SP', t.spatie)}
-      <button class="go" data-act="zoeknu">${t.zoek}</button></div>`;
+    const onder = `<div class="kr wide">${kn('CLR', t.clear)}${kn('SP', t.space)}
+      <button class="go" data-act="zoeknu">${t.search}</button></div>`;
     return `<div class="kbd">${num}${rijen}${onder}</div>`;
   }
 
   _resHtml() {
     const t = this._taal();
-    if (this._bezig) return `<div class="leeg">${t.bezigZoeken}</div>`;
-    if (!this._res.length) return `<div class="leeg">${t.geenResultaat}</div>`;
+    if (this._bezig) return `<div class="leeg">${t.searching}</div>`;
+    if (!this._res.length) return `<div class="leeg">${t.noResults}</div>`;
     const soort = SOORTEN[this._soort];
     if (soort.lijst) {
       const rijen = this._res.map((it, i) => {
@@ -1478,16 +1725,16 @@ class MusicAssistantTouchCard extends HTMLElement {
     for (const d of this._det) tijd += parseInt(d.media_duration || 0, 10) || 0;
     const min = Math.round(tijd / 60);
     const extra = min > 0 ? (min >= 60
-      ? ` · ${Math.floor(min / 60)} ${t.uur} ${min % 60} ${t.minuut}`
-      : ` · ${min} ${t.minuut}`) : '';
+      ? ` · ${Math.floor(min / 60)} ${t.hours} ${min % 60} ${t.minutes}`
+      : ` · ${min} ${t.minutes}`) : '';
     const telling = (this._bezig || !n) ? ''
-      : `<span class="aantal">${n} ${n === 1 ? t.nummer : t.nummers}${extra}</span>`;
+      : `<span class="aantal">${n} ${n === 1 ? t.track : t.tracks}${extra}</span>`;
     const kop = `<div class="kop">
-      <button class="terug" data-act="terug">${svg('terug')} ${this._terug === 'home' ? t.terug : t.resultaten}</button>
+      <button class="terug" data-act="terug">${svg('terug')} ${this._terug === 'home' ? t.back : t.results}</button>
       <div class="titel">${esc(this._detTitel)}${telling}</div>
-      <button class="alles" data-act="alles">${t.speelAlles}</button></div>`;
-    if (this._bezig) return kop + `<div class="leeg">${t.bezigOphalen}</div>`;
-    if (!n) return kop + `<div class="leeg">${t.geenNummers}</div>`;
+      <button class="alles" data-act="alles">${t.playAll}</button></div>`;
+    if (this._bezig) return kop + `<div class="leeg">${t.loading}</div>`;
+    if (!n) return kop + `<div class="leeg">${t.noTracks}</div>`;
     const rijen = this._det.map((d, i) => {
       const img = d.thumbnail ? `<img loading="lazy" src="${esc(KLEIN(d.thumbnail))}">` : '<span></span>';
       return `<button class="rij" data-act="det" data-i="${i}">${img}
@@ -1606,8 +1853,7 @@ class MusicAssistantTouchCard extends HTMLElement {
       b.classList.toggle('speelt', !!(zst && SPEELT.includes(zst.state)));
     });
 
-    const vs = this._st(this._volEntity());
-    const vol = vs && vs.attributes.volume_level != null ? vs.attributes.volume_level : 0;
+    const vol = this._volNu() || 0;
     const fill = sr.getElementById('volfill');
     const lbl = sr.getElementById('vollbl');
     const knop = sr.getElementById('volknop');
@@ -1623,8 +1869,8 @@ class MusicAssistantTouchCard extends HTMLElement {
     const pic = a.entity_picture_local || a.entity_picture || '';
     const t = this._taal();
     const nietMA = ent === eigen && !!this._maSpeler(this._zoneCfg().entity).nietMA;
-    const titel = nietMA ? t.nietMA : (a.media_title || (s ? t.stil : t.geenSpeler));
-    const artiest = nietMA ? t.nietMAuitleg
+    const titel = nietMA ? t.noMaInfo : (a.media_title || (s ? t.nothingPlaying : t.playerNotFound));
+    const artiest = nietMA ? t.noMaInfoHelp
       : [a.media_artist, a.media_album_name].filter(Boolean).join(' · ');
 
     // Na een druk op play/pauze tonen we alvast de nieuwe stand, tot de speler
@@ -1645,7 +1891,7 @@ class MusicAssistantTouchCard extends HTMLElement {
     this._npSig = sig;
     // Speelt het ergens anders dan op de gekozen zone? Laat zien waar.
     const elders = (ent && ent !== eigen && s && SPEELT.includes(s.state))
-      ? `<div class="op">${t.speeltOp} ${esc(a.friendly_name || ent)}</div>` : '';
+      ? `<div class="op">${t.playingOn} ${esc(a.friendly_name || ent)}</div>` : '';
     const duur = parseInt(a.media_duration, 10) || 0;
     np.innerHTML = `
       ${pic && !nietMA ? `<div class="glow" style="background-image:url('${esc(pic)}')"></div>` : ''}
@@ -1653,7 +1899,8 @@ class MusicAssistantTouchCard extends HTMLElement {
             : `<div class="leegart">${svg('muziek')}</div>`}
       <div class="tx">
         <div class="t">${esc(titel)}</div>
-        <div class="a">${esc(artiest)}</div>
+        <div class="a">${nietMA ? esc(artiest) : [a.media_artist, a.media_album_name].filter(Boolean)
+          .map((x, i) => (i ? '<span class="sep"> · </span>' : '') + `<span class="d${i}">${esc(x)}</span>`).join('')}</div>
         ${elders}
       </div>
       ${duur ? `<div class="voort">
@@ -1662,12 +1909,12 @@ class MusicAssistantTouchCard extends HTMLElement {
       </div>` : ''}
       <div class="ctr">
         <button class="shuf${a.shuffle ? ' on' : ''}" data-act="shuffle"
-                title="${t.shuffleTitel}">${svg('shuffle')}</button>
+                title="${t.shuffle}">${svg('shuffle')}</button>
         <button data-act="prev">${svg('prev')}</button>
         <button class="hoofd" data-act="pp">${svg(speelt ? 'pause' : 'play')}</button>
         <button data-act="next">${svg('next')}</button>
         <button class="rep${a.repeat && a.repeat !== 'off' ? ' on' : ''}" data-act="repeat"
-                title="${t.herhaalTitel}">${svg(a.repeat === 'one' ? 'mdi:repeat-once' : 'mdi:repeat')}</button>
+                title="${t.repeat}">${svg(a.repeat === 'one' ? 'mdi:repeat-once' : 'mdi:repeat')}</button>
       </div>`;
     this._toonVoortgang();
   }
@@ -1726,7 +1973,7 @@ ha-expansion-panel { margin-bottom:8px; --expansion-panel-summary-padding:0 12px
 .tegel:first-child { border-top:0; }
 `;
 
-const ED_LABEL = { path: 'pad', radio_mode: 'radio', count: 'aantal' };
+const ED_LABEL = { radio_mode: 'radio', vullen: 'tilesFrom' };
 
 // Hint line under a field in the editor. Only for the fields where a new user
 // has nothing to go on - the media id above all: it is a plain text box and
@@ -1758,13 +2005,13 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
   _ed() {
     const g = ((this._cfg && this._cfg.language)
       || (this._hass && this._hass.language) || 'en').slice(0, 2).toLowerCase();
-    return (TAAL[g] || TAAL.en).ed;
+    return (TAAL[g] || TAAL.en).editor;
   }
 
   _soortNaam() {
     const g = ((this._cfg && this._cfg.language)
       || (this._hass && this._hass.language) || 'en').slice(0, 2).toLowerCase();
-    return (TAAL[g] || TAAL.en).soort;
+    return (TAAL[g] || TAAL.en).types;
   }
 
   _melden() {
@@ -1821,7 +2068,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     if (weg) {
       const r = document.createElement('div');
       r.className = 'rij';
-      r.appendChild(this._knop(this._ed().weg, 'weg', weg));
+      r.appendChild(this._knop(this._ed().remove, 'weg', weg));
       blok.appendChild(r);
     }
     p.appendChild(blok);
@@ -1847,7 +2094,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     // nothing about which three of them matter.
     const algVak = document.createElement('div');
     algVak.className = 'vak';
-    algVak.innerHTML = `<div class="kop">${ed.algemeen}</div>`;
+    algVak.innerHTML = `<div class="kop">${ed.general}</div>`;
     algVak.appendChild(this._form(
       [{ name: 'config_entry_id', required: true,
         selector: { config_entry: { integration: 'music_assistant' } } }],
@@ -1855,22 +2102,28 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       (v) => { this._cfg.config_entry_id = v.config_entry_id; this._melden(); }
     ));
 
-    algVak.appendChild(this._paneel(ed.weergave, this._form(
+    algVak.appendChild(this._paneel(ed.display, this._form(
       [
         { name: '', type: 'grid', schema: [
           { name: 'height', selector: { number: { min: 240, max: 1400, step: 2, mode: 'box' } } },
           { name: 'fill_margin', selector: { number: { min: 0, max: 200, step: 1, mode: 'box' } } },
         ] },
+        { name: 'layout', selector: { select: { mode: 'dropdown', options: [
+          { value: 'auto', label: ed.layoutAuto },
+          { value: 'columns', label: ed.layoutColumns },
+          { value: 'stacked', label: ed.layoutStacked },
+        ] } } },
         { name: 'fill', selector: { boolean: {} } },
         { name: 'arrows', selector: { boolean: {} } },
         { name: 'language', selector: { select: { mode: 'dropdown', options: [
-          { value: '', label: ed.automatisch },
-          { value: 'nl', label: 'Nederlands' }, { value: 'en', label: 'English' },
+          { value: '', label: ed.followHa },
+          ...Object.keys(TAAL).map((k) => ({ value: k, label: TAAL[k].languageName })),
         ] } } },
       ],
       {
         height: c.height == null ? 556 : c.height,
         fill_margin: c.fill_margin == null ? 8 : c.fill_margin,
+        layout: c.layout || 'auto',
         fill: c.fill === true,
         arrows: c.arrows !== false,
         language: c.language || '',
@@ -1880,6 +2133,8 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         if (v.fill_margin == null || v.fill_margin === '' || v.fill_margin === 8) {
           delete this._cfg.fill_margin;
         } else this._cfg.fill_margin = v.fill_margin;
+        if (v.layout && v.layout !== 'auto') this._cfg.layout = v.layout;
+        else delete this._cfg.layout;
         if (v.fill) this._cfg.fill = true; else delete this._cfg.fill;
         this._cfg.arrows = !!v.arrows;
         if (v.language) this._cfg.language = v.language; else delete this._cfg.language;
@@ -1887,15 +2142,16 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       }
     )));
 
-    algVak.appendChild(this._paneel(ed.spelenKop, this._form(
+    algVak.appendChild(this._paneel(ed.playingHeader, this._form(
       [
         { name: '', type: 'grid', schema: [
           { name: 'volume_max', selector: { number: { min: 5, max: 100, step: 1, mode: 'box' } } },
           { name: 'volume_start', selector: { number: { min: 0, max: 100, step: 1, mode: 'box' } } },
         ] },
         { name: 'tile_action', selector: { select: { mode: 'dropdown', options: [
-          { value: 'open', label: ed.openen }, { value: 'play', label: ed.afspelen },
+          { value: 'open', label: ed.showTracks }, { value: 'play', label: ed.playIt },
         ] } } },
+        { name: 'show_volume', selector: { boolean: {} } },
         { name: 'transfer_on_switch', selector: { boolean: {} } },
         { name: 'retry_next', selector: { boolean: {} } },
       ],
@@ -1903,6 +2159,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         volume_max: c.volume_max == null ? 100 : c.volume_max,
         volume_start: c.volume_start == null ? null : c.volume_start,
         tile_action: c.tile_action || 'open',
+        show_volume: c.show_volume !== false,
         transfer_on_switch: c.transfer_on_switch !== false,
         retry_next: c.retry_next !== false,
       },
@@ -1912,17 +2169,19 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         if (v.volume_start == null || v.volume_start === '') delete this._cfg.volume_start;
         else this._cfg.volume_start = v.volume_start;
         this._cfg.tile_action = v.tile_action;
+        if (v.show_volume === false) this._cfg.show_volume = false; else delete this._cfg.show_volume;
         this._cfg.transfer_on_switch = !!v.transfer_on_switch;
         this._cfg.retry_next = !!v.retry_next;
         this._melden();
       }
     )));
 
-    algVak.appendChild(this._paneel(ed.zoekKop, this._form(
+    algVak.appendChild(this._paneel(ed.searchHeader, this._form(
       [
         { name: 'keyboard', selector: { boolean: {} } },
         { name: 'keyboard_layout', selector: { select: { mode: 'dropdown', options: [
           { value: 'qwerty', label: 'QWERTY' }, { value: 'azerty', label: 'AZERTY' },
+          { value: 'nb', label: 'QWERTY Norsk (ÆØÅ)' },
           { value: 'abc', label: 'ABC' },
         ] } } },
         { name: 'limit', selector: { number: { min: 6, max: 100, step: 1, mode: 'box' } } },
@@ -1951,7 +2210,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     // ---- speakers ----
     const zVak = document.createElement('div');
     zVak.className = 'vak';
-    zVak.innerHTML = `<div class="kop">${ed.zones}</div>`;
+    zVak.innerHTML = `<div class="kop">${ed.speakers}</div>`;
     const zones = c.zones || [];
     const zSchema = [
       { name: '', type: 'grid', schema: [
@@ -1959,7 +2218,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         { name: 'icon', selector: { icon: {} } },
       ] },
       { name: 'entity', selector: { entity: { filter: { domain: 'media_player' } } } },
-      { name: 'volume', selector: { entity: { filter: { domain: 'media_player' } } } },
+      { name: 'volume', selector: { entity: { filter: { domain: ['media_player', 'input_number', 'number'] } } } },
       { name: '', type: 'grid', schema: [
         { name: 'volume_max', selector: { number: { min: 5, max: 100, step: 1, mode: 'box' } } },
         { name: 'volume_start', selector: { number: { min: 0, max: 100, step: 1, mode: 'box' } } },
@@ -1997,13 +2256,13 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         this._cfg.zones[i] = zn;
         this._melden();
       });
-      zVak.appendChild(this._paneel(z.name || ed.naamloos, form, () => {
+      zVak.appendChild(this._paneel(z.name || ed.unnamed, form, () => {
         this._cfg.zones = zones.filter((x, k) => k !== i);
         if (!this._cfg.zones.length) delete this._cfg.zones;
         this._herbouw();
       }));
     });
-    zVak.appendChild(this._knop(ed.zoneToe, '', () => {
+    zVak.appendChild(this._knop(ed.addSpeaker, '', () => {
       this._cfg.zones = (this._cfg.zones || []).concat([{ name: '', entity: '' }]);
       this._herbouw();
     }));
@@ -2012,7 +2271,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     // ---- categorieen ----
     const cVak = document.createElement('div');
     cVak.className = 'vak';
-    cVak.innerHTML = `<div class="kop">${ed.cats}</div>`;
+    cVak.innerHTML = `<div class="kop">${ed.categories}</div>`;
     const cats = c.categories || [];
     const tSchema = [
       { name: '', type: 'grid', schema: [
@@ -2035,8 +2294,8 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         [
           { name: 'name', selector: { text: {} } },
           { name: 'vullen', selector: { select: { mode: 'dropdown', options: [
-            { value: 'hand', label: ed.bronHand },
-            { value: 'auto', label: ed.bronAuto },
+            { value: 'hand', label: ed.sourceManual },
+            { value: 'auto', label: ed.sourceAuto },
           ] } } },
         ],
         { name: cat.name || '', vullen: auto ? 'auto' : 'hand' },
@@ -2069,10 +2328,10 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
               { name: 'count', selector: { number: { min: 1, max: 100, step: 1, mode: 'box' } } },
             ] },
             { name: 'order_by', selector: { select: { mode: 'dropdown', options: [
-              { value: '', label: ed.ordStandaard },
-              { value: 'last_played_desc', label: ed.ordRecent },
-              { value: 'timestamp_added_desc', label: ed.ordNieuw },
-              { value: 'random', label: ed.ordRandom },
+              { value: '', label: ed.orderDefault },
+              { value: 'last_played_desc', label: ed.orderRecent },
+              { value: 'timestamp_added_desc', label: ed.orderNew },
+              { value: 'random', label: ed.orderRandom },
             ] } } },
             { name: 'favorite', selector: { boolean: {} } },
             { name: 'play', selector: { boolean: {} } },
@@ -2117,7 +2376,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
         }));
         const wr = document.createElement('div');
         wr.className = 'rij';
-        wr.appendChild(this._knop(ed.weg, 'weg', () => {
+        wr.appendChild(this._knop(ed.remove, 'weg', () => {
           this._cfg.categories[ci].tiles = (cat.tiles || []).filter((x, k) => k !== ti);
           this._herbouw();
         }));
@@ -2126,21 +2385,21 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
       });
       binnen.appendChild(tegels);
       if (!auto) {
-        binnen.appendChild(this._knop(ed.tegelToe, '', () => {
+        binnen.appendChild(this._knop(ed.addTile, '', () => {
           this._cfg.categories[ci].tiles = (cat.tiles || []).concat([{ name: '', uri: '' }]);
           this._herbouw();
         }));
       }
-      const kop = (cat.name || ed.naamloos) + '  ·  ' + (auto
-        ? ed.autoTegels
-        : ((cat.tiles || []).length) + ' ' + ed.tegels.toLowerCase());
+      const kop = (cat.name || ed.unnamed) + '  ·  ' + (auto
+        ? ed.autoTiles
+        : ((cat.tiles || []).length) + ' ' + ed.tiles.toLowerCase());
       cVak.appendChild(this._paneel(kop, binnen, () => {
         this._cfg.categories = cats.filter((x, k) => k !== ci);
         if (!this._cfg.categories.length) delete this._cfg.categories;
         this._herbouw();
       }));
     });
-    cVak.appendChild(this._knop(ed.catToe, '', () => {
+    cVak.appendChild(this._knop(ed.addCategory, '', () => {
       this._cfg.categories = (this._cfg.categories || []).concat([{ name: '', tiles: [] }]);
       this._herbouw();
     }));
@@ -2149,7 +2408,7 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
     // ---- navigatieknoppen ----
     const lVak = document.createElement('div');
     lVak.className = 'vak';
-    lVak.innerHTML = `<div class="kop">${ed.links}</div>`;
+    lVak.innerHTML = `<div class="kop">${ed.navigation}</div>`;
     const links = c.links || [];
     const lSchema = [
       { name: '', type: 'grid', schema: [
@@ -2166,13 +2425,13 @@ class MusicAssistantTouchCardEditor extends HTMLElement {
           this._cfg.links[li] = { name: v.name, icon: v.icon, path: v.path };
           this._melden();
         });
-      lVak.appendChild(this._paneel(l.name || ed.naamloos, form, () => {
+      lVak.appendChild(this._paneel(l.name || ed.unnamed, form, () => {
         this._cfg.links = links.filter((x, k) => k !== li);
         if (!this._cfg.links.length) delete this._cfg.links;
         this._herbouw();
       }));
     });
-    lVak.appendChild(this._knop(ed.linkToe, '', () => {
+    lVak.appendChild(this._knop(ed.addButton, '', () => {
       this._cfg.links = (this._cfg.links || []).concat([{ name: '', icon: 'mdi:home', path: '' }]);
       this._herbouw();
     }));
