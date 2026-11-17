@@ -52,7 +52,7 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 **Light or dark from the theme it sits in.** The card measures the background its own theme gives it, not the operating system's preference. A view can carry a theme of its own, so a light dashboard on a laptop set to dark mode still gets dark text.
 
-**A form for everything.** Speakers, categories, tiles, navigation buttons: all of it from the dashboard editor, no YAML needed. The code editor keeps working and stays authoritative for keys the form does not know about.
+**A form for everything.** Speakers, categories, tiles, navigation buttons: all of it from the dashboard editor, no YAML needed. The layout and the language are under *Display*, hiding the volume under *Playing*, the keyboard layout under *Search*. The editor itself follows the card's language. The code editor keeps working and stays authoritative for keys the form does not know about.
 
 ![The settings in the dashboard editor](images/music-card-settings-light.png)
 
@@ -92,6 +92,25 @@ categories:
       media_type: playlist
       order_by: last_played_desc
       limit: 12
+```
+
+A tablet on the wall in portrait, one speaker, volume on the amplifier:
+
+```yaml
+type: custom:touch-music-card
+config_entry_id: 01JXXXXXXXXXXXXXXXXXXXXXXX
+layout: auto          # player on top while the screen stands upright
+fill: true            # use the whole screen below the card
+show_volume: false
+zones:
+  - name: Living room
+    entity: media_player.living_room
+categories:
+  - name: Recently played
+    source:
+      media_type: playlist
+      order_by: last_played_desc
+      limit: 30
 ```
 
 ## Categories: by hand or filled for you
@@ -180,14 +199,12 @@ Prefer `library://` ids where you can. Those are Music Assistant's own library n
 | `categories` | — | Groups of tiles on the right. |
 | `links` | — | Navigation buttons to other dashboard views. |
 | `height` | `556` | Fixed height in pixels. |
-| `fill` | `false` | Work out the height from the space available instead. |
+| `fill` | `false` | Work out the height from the space available instead: the card ends at the bottom of the screen and the tiles scroll inside it. Also on a phone. |
 | `layout` | `auto` | `auto` puts the player on top as soon as the screen stands upright (portrait), `columns` always keeps the two columns, `stacked` always puts the player on top. For a portrait kiosk, combine it with `fill: true`. |
 | `fill_margin` | `8` | Space to leave at the bottom when filling. |
 | `volume_max` | `100` | The end of the slider, in percent. |
 | `volume_start` | — | Drop back to this percentage when starting above `volume_max`. Leave it out and the card never touches your volume on its own. |
 | `show_volume` | `true` | Set to `false` to hide the volume control, for example when the volume lives on an amplifier or a remote. |
-
-With a single speaker the card leaves out the speaker switcher: there is nothing to switch between.
 | `limit` | `24` | Search results per type. |
 | `search_types` | all four | Which of track, album, artist, playlist can be searched. |
 | `tile_action` | `open` | `open` shows a tile's tracks, `play` starts it straight away. |
@@ -196,7 +213,9 @@ With a single speaker the card leaves out the speaker switcher: there is nothing
 | `arrows` | `true` | Scroll buttons beside the lists, for panels without a scrollbar. |
 | `transfer_on_switch` | `true` | Move the queue along when you switch speaker. `false` switches the view only. |
 | `retry_next` | `true` | Re-send a skip if nothing happens, which Chromecast players sometimes need. |
-| `language` | follows HA | A language from [translations](translations/), for example `en` or `nl`. A string that is not translated yet shows in English. |
+| `language` | follows HA | A language from [translations](translations/), for example `en` or `nl`. Sets both the card and its editor. A text that is not translated yet shows in English. See [Translations](#translations). |
+
+With a single speaker the card leaves out the speaker switcher: there is nothing to switch between.
 
 ### Zone
 
