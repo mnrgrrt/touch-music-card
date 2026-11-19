@@ -326,7 +326,7 @@ What you install is still one file. The source is kept almost the same way: `src
 
 ## Translations
 
-The card speaks English and Dutch. Adding your language is welcome and needs no code:
+The card speaks English, Dutch and Norwegian (thanks to [@grotteru](https://github.com/grotteru)). Adding your language is welcome and needs no code:
 
 1. Copy `translations/en.json` to `translations/<code>.json`, using the two-letter code Home Assistant uses for your language (`nb` for Norwegian Bokmål, `de` for German, and so on).
 2. Set `languageName` to the name of the language in that language, and translate the texts on the right of each `:`. Leave the names on the left as they are.
