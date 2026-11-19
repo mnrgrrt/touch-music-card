@@ -25,7 +25,7 @@
 //
 // https://github.com/mnrgrrt/touch-music-card - MIT licensed.
 
-const VERSIE = '2.6.2';
+const VERSIE = '2.6.3';
 
 const KLEIN = (u) => (u || '')
   .replace('ab67616d0000b273', 'ab67616d00004851')
@@ -737,6 +737,16 @@ ha-icon { pointer-events:none; }
   .wrap.staand .volrow > button.vk { width:clamp(28px, 3.75cqw, 48px); height:clamp(28px, 3.75cqw, 48px); }
   .wrap.staand .volrow ha-icon { --mdc-icon-size:clamp(19px, 2.625cqw, 34px); }
   .wrap.staand .volrow .vollbl { font-size:clamp(11.5px, 1.5cqw, 19px); }
+  /* Speaker switcher and scroll bar: a bit smaller on a narrow screen,
+     from 800 up the same as before. They do not need to grow. */
+  .wrap.staand .zones { border-radius:clamp(10px, 1.375cqw, 11px); }
+  .wrap.staand .zones button { height:clamp(30px, 4cqw, 32px); border-radius:clamp(8px, 1.125cqw, 9px); }
+  .wrap.staand .zones ha-icon { --mdc-icon-size:clamp(18px, 2.375cqw, 19px); }
+  .wrap.staand .scrollbox.pijl { grid-template-columns:minmax(0,1fr) clamp(28px, 4.25cqw, 34px); }
+  .wrap.staand .pijlen button { flex-basis:clamp(36px, 5.5cqw, 44px); }
+  .wrap.staand .pijlen ha-icon { --mdc-icon-size:clamp(18px, 2.75cqw, 22px); }
+  .wrap.staand .rail::before { width:clamp(5px, .75cqw, 6px); margin-left:calc(clamp(5px, .75cqw, 6px) / -2); }
+  .wrap.staand .duim { width:clamp(10px, 1.5cqw, 12px); margin-left:calc(clamp(10px, 1.5cqw, 12px) / -2); }
 }
 @container (max-width: 700px) {
   .wrap.staand .volrow { grid-template-columns:36px minmax(0,1fr) 36px auto; }
@@ -754,12 +764,15 @@ ha-icon { pointer-events:none; }
   /* On a phone the player is a compact block: a small cover with the title
      beside it, then bar, buttons and volume. A big cover here left room for
      one row of tiles and nothing more. */
-  .np { flex:0 0 auto; display:grid; grid-template-columns:84px minmax(0,1fr);
-        column-gap:14px; align-items:center; text-align:left; padding:4px 0 0; }
-  .np .art, .np .leegart { grid-column:1; grid-row:1; width:84px; height:84px; border-radius:10px; }
+  /* Cover and title sit in the middle as one block. The outer columns take
+     what is left, so a long title still runs to the edge. */
+  .np { flex:0 0 auto; display:grid;
+        grid-template-columns:minmax(0,1fr) 84px minmax(0,max-content) minmax(0,1fr);
+        column-gap:0; align-items:center; text-align:left; padding:4px 0 0; }
+  .np .art, .np .leegart { grid-column:2; grid-row:1; width:84px; height:84px; border-radius:10px; }
   .np .leegart ha-icon { --mdc-icon-size:34px; }
-  .np .glow { grid-column:1; grid-row:1; left:42px; top:-4px; width:92px; height:92px; }
-  .np .tx { grid-column:2; grid-row:1; padding-top:0; min-width:0; }
+  .np .glow { grid-column:2; grid-row:1; left:42px; top:-4px; width:92px; height:92px; }
+  .np .tx { grid-column:3; grid-row:1; padding-top:0; padding-left:14px; min-width:0; }
   .np .t { font-size:15.5px; }
   .np .a { font-size:12.5px; margin-top:3px; }
   .np .op { margin-top:4px; }
@@ -773,8 +786,15 @@ ha-icon { pointer-events:none; }
   .volrow { margin-top:8px; }
   /* Three smaller covers per row instead of two big ones. */
   .wrap { --tw:78px; }
-  .tiles { grid-template-columns:repeat(auto-fill,minmax(86px,1fr)); gap:10px 8px; }
+  .tiles { grid-template-columns:repeat(auto-fill,minmax(78px,1fr)); gap:10px 4px; }
   .tile span { font-size:11px; }
+  .zones button { height:30px; }
+  .zones ha-icon { --mdc-icon-size:18px; }
+  .scrollbox.pijl { grid-template-columns:minmax(0,1fr) 28px; }
+  .pijlen button { flex-basis:36px; }
+  .pijlen ha-icon { --mdc-icon-size:18px; }
+  .rail::before { width:5px; margin-left:-2.5px; }
+  .duim { width:10px; margin-left:-5px; }
   #melding:empty { min-height:0; padding:0; }
   /* Narrow, standing and filling the screen: the card is exactly as high as
      the screen below it, and the tiles get what the player leaves over. */
