@@ -1,16 +1,43 @@
 # Touch music card
 
-<img src="images/music-card-nesthub.png" alt="The card on a Nest Hub" width="560">
+**One Music Assistant card for every touch screen in the house.** A Nest Hub on the desk, a tablet on the wall, the phone in your pocket. The card fits itself to each of them and you drive it with your thumbs.
 
-A Lovelace card that puts Music Assistant behind one screen, built for touch panels and for Google Nest Hub cast dashboards at 1024×600.
+![The card on a Nest Hub, a wall tablet and a phone](images/music-card-screens.png)
 
-It was written for a second-hand Nest Hub on a desk. Speaking to such a panel hands you back to Google and closes the dashboard you were looking at, and it has no keyboard, so a music card there has to be something you can drive entirely with your thumbs. That is what this is: speakers along the top, what is playing on the left, and everything you might want to start on the right.
+It started on a second-hand Nest Hub, and that is still where it stands out. A Nest Hub has no keyboard, and speaking to it hands you back to Google and closes your dashboard. So this card brings its own on-screen keyboard and needs nothing but taps. It is one of the few music cards you can fully use on a Nest Hub: search, browse, pick a speaker, play.
 
-It has a sibling for cameras: [Touch camera card](https://github.com/mnrgrrt/touch-camera-card) — same screen size, same thumb-first idea, and the two sit side by side as views on one dashboard.
+## Highlights
+
+- **Made for the Nest Hub.** Its own keyboard for search (QWERTY, AZERTY, Norwegian or ABC), big touch targets at 1024×600, and covers loaded at a small size so the Hub stays quick.
+- **Fits any screen.** Two columns on a landscape screen. Player on top when the screen stands upright. A compact player with three covers per row on a phone. On a large wall tablet everything grows along.
+- **Music follows you.** Your speakers are zones. Switch while something plays and the queue moves to the other speaker.
+- **Tiles for what you play.** Your playlists, radio stations and mixes as covers. Write the list yourself, or let Music Assistant fill it: recently played, favourites, a random dozen albums.
+- **Search that goes deeper.** Tracks, albums, artists and playlists. An album opens its tracks, an artist opens their albums.
+- **Any music source.** It talks to Music Assistant, so Spotify, local files, Plex, Jellyfin, Tidal, Qobuz, YouTube Music, radio and the rest all work.
+- **No YAML needed.** Everything is in the card editor, in English, Dutch or Norwegian.
+
+It has a sibling for cameras: [Touch camera card](https://github.com/mnrgrrt/touch-camera-card). Same idea, same screens, and the two sit side by side as views on one dashboard.
+
+## On a Nest Hub
+
+Cast a dashboard to the Hub and the card fills the screen at 1024×600. Speakers along the top, what is playing on the left, everything you might want to start on the right. Search opens a keyboard on the screen itself, because the Hub has none.
+
+![Searching with the on-screen keyboard](images/music-card-search-light.png)
 
 The same card in a dark theme:
 
 ![The card in a dark theme](images/music-card-dark.png)
+
+## On a wall tablet or a phone
+
+When the screen stands upright, the card puts the player on top: cover, title and buttons, with your tiles below. It does this by itself (`layout: auto`); set `layout: stacked` or `layout: columns` to choose.
+
+- **Wall tablet.** The card scales with its width. On a large tablet the cover, buttons and covers get bigger, so you get fewer but larger covers per row. It stops growing at 1.6 times the normal size, from a card width of 1280 pixels.
+- **Phone.** The player becomes a compact block: a small cover with the title beside it, the buttons and volume below. The tiles go three in a row, so most of the screen is left for your music.
+- **Fill the screen.** With `fill: true` the card ends exactly at the bottom of the screen and the tiles scroll inside it. Handy for a kiosk.
+- With one speaker the speaker switcher is left out. `show_volume: false` hides the volume when that lives on an amplifier or a remote.
+
+<img src="images/music-card-portrait.png" alt="The card on a tablet on the wall" width="380"> <img src="images/music-card-phone.png" alt="The card on a phone" width="300">
 
 ## Does it need Spotify?
 
@@ -22,35 +49,23 @@ No. The card talks to **Music Assistant**, not to a music service.
 | Starting something | `music_assistant.play_media` |
 | Opening an album, artist or playlist | `media_player/browse_media` |
 
-Music Assistant answers with whatever providers you have enabled — local files, Jellyfin, Plex, Navidrome, Subsonic, YouTube Music, Apple Music, Deezer, Tidal, Qobuz, SoundCloud, radio. The card never learns which one answered, and there is no service account, token or integration for it to care about beyond Music Assistant itself.
+Music Assistant answers with whatever providers you have enabled: local files, Jellyfin, Plex, Navidrome, Subsonic, YouTube Music, Apple Music, Deezer, Tidal, Qobuz, SoundCloud, radio. The card never learns which one answered. There is no service account, token or integration for it to care about beyond Music Assistant itself.
 
-One Spotify-shaped detail is worth naming, because you will find it in the source. The card rewrites Spotify's CDN image URLs to a smaller size before putting a cover on screen, which keeps a Nest Hub quick. It is a plain text replacement: a URL from any other provider passes through untouched and the image works normally — it is just the original size, so it loads slower. If that bothers you, give the tile its own `image:` URL, or add a rewrite rule of your own at the top of the file.
+One Spotify-shaped detail is worth naming, because you will find it in the source. The card rewrites Spotify's CDN image URLs to a smaller size before putting a cover on screen, which keeps a Nest Hub quick. It is a plain text replacement: a URL from any other provider passes through untouched and works normally, only at its original size. If that bothers you, give the tile its own `image:` URL, or add a rewrite rule of your own at the top of the file.
 
 ## What it does
 
 **Speakers as zones.** A row of buttons for the players and groups you care about. Switching while something is playing moves the queue across, so the music follows you rather than stopping. A zone can turn a group off or join speakers together first; see the caveat under `before` before you use it.
 
-**A volume slider that fits the speaker.** A soundbar can already be loud at 20%, which leaves you fiddling in the first fifth of the slider. Set `volume_max: 20` and the whole slider maps onto 0–20%. The card writes a volume only when you move the slider or press the buttons — it never quietly sets one for you.
+**A volume slider that fits the speaker.** A soundbar can already be loud at 20%, which leaves you fiddling in the first fifth of the slider. Set `volume_max: 20` and the whole slider maps onto 0 to 20%. The volume can also point to an `input_number` or `number`, for an amplifier. The card writes a volume only when you move the slider or press the buttons. It never quietly sets one for you.
 
 **Tiles for what you actually play.** Categories of tiles with cover art: your playlists, your radio stations, a daily mix. Tapping one opens its tracks, or plays it straight away if you would rather.
 
-**Categories that fill themselves.** A category can be a list you write, or a question you ask Music Assistant — recently played playlists, your favourites, a random dozen albums. See [Categories](#categories-by-hand-or-filled-for-you).
+**Categories that fill themselves.** A category can be a list you write, or a question you ask Music Assistant: recently played playlists, your favourites, a random dozen albums. See [Categories](#categories-by-hand-or-filled-for-you).
 
 **Covers that do not go stale.** A tile does not need an image URL. The card asks Music Assistant what the cover is now, so a playlist that changes its artwork changes on the card too. Pin an `image:` only when you want a particular one.
 
-**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard because the panel has none — QWERTY, AZERTY, Norwegian QWERTY (ÆØÅ) or ABC. Results drill down: an album opens its tracks, an artist opens their albums.
-
-![Searching, in a light theme](images/music-card-search-light.png)
-
-**At home on a screen that stands upright.** On a tablet mounted on the wall in portrait, the card puts the player on top as one block: cover, title and buttons, with your tiles below in as many columns as fit. It does this by itself when the screen stands upright (`layout: auto`); set `layout: stacked` or `layout: columns` to choose. With one speaker the speaker switcher is left out, and `show_volume: false` hides the volume when that lives on an amplifier or a remote.
-
-**It grows with the screen.** Upright, the card scales with its width. On a large wall tablet the cover, the buttons and the tiles get bigger, so you get fewer but larger covers per row instead of a small player with tiny covers. It stops growing at 1.6 times the normal size, from a card width of 1280 pixels.
-
-<img src="images/music-card-portrait.png" alt="The card on a tablet mounted on the wall in portrait" width="420">
-
-**On a phone too.** On a narrow card the player becomes a compact block: a small cover with the title beside it, and the buttons and volume below, so most of the screen is left for your music. The tiles go three in a row. This holds for every phone, also the wider ones of 412 pixels and up that most Android phones are. With `fill: true` the card ends exactly at the bottom of the screen and the tiles scroll inside it.
-
-<img src="images/music-card-phone.png" alt="The card on a phone" width="320">
+**Search with its own keyboard.** Tracks, albums, artists and playlists, with an on-screen keyboard: QWERTY, AZERTY, Norwegian QWERTY (ÆØÅ) or ABC. On a phone or PC you can switch it off and use the normal keyboard. Results drill down: an album opens its tracks, an artist opens their albums.
 
 **Light or dark from the theme it sits in.** The card measures the background its own theme gives it, not the operating system's preference. A view can carry a theme of its own, so a light dashboard on a laptop set to dark mode still gets dark text.
 
