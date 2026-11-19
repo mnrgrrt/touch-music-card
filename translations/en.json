@@ -28,7 +28,7 @@
   "nothingPlaying": "Nothing playing",
   "playerNotFound": "Player not found",
   "noMaInfo": "No track info from Music Assistant",
-  "noMaInfoHelp": "This speaker reaches Music Assistant through Home Assistant. See the README.",
+  "noMaInfoHelp": "In Music Assistant, switch on \"Expose this player to Home Assistant\" for this speaker. See the README.",
   "playingOn": "playing on",
   "shuffle": "Shuffle",
   "repeat": "Repeat",

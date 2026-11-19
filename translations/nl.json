@@ -28,7 +28,7 @@
   "nothingPlaying": "Niets aan het spelen",
   "playerNotFound": "Speler niet gevonden",
   "noMaInfo": "Geen nummerinfo van Music Assistant",
-  "noMaInfoHelp": "Deze speaker komt via Home Assistant in Music Assistant. Zie de README.",
+  "noMaInfoHelp": "Zet in Music Assistant \"Expose this player to Home Assistant\" aan voor deze speaker. Zie de README.",
   "playingOn": "speelt op",
   "shuffle": "Willekeurige volgorde",
   "repeat": "Herhalen",

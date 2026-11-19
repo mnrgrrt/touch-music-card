@@ -29,7 +29,7 @@
   "nothingPlaying": "Ingenting spilles av",
   "playerNotFound": "Fant ikke avspilleren",
   "noMaInfo": "Ingen sporinformasjon fra Music Assistant",
-  "noMaInfoHelp": "Denne høyttaleren kommuniserer med Music Assistant via Home Assistant. Se README.",
+  "noMaInfoHelp": "Slå på \"Expose this player to Home Assistant\" for denne høyttaleren i Music Assistant. Se README.",
   "playingOn": "spilles av på",
   "shuffle": "Tilfeldig rekkefølge",
   "repeat": "Gjenta",
