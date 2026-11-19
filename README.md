@@ -44,9 +44,11 @@ One Spotify-shaped detail is worth naming, because you will find it in the sourc
 
 **At home on a screen that stands upright.** On a tablet mounted on the wall in portrait, the card puts the player on top as one block: cover, title and buttons, with your tiles below in as many columns as fit. It does this by itself when the screen stands upright (`layout: auto`); set `layout: stacked` or `layout: columns` to choose. With one speaker the speaker switcher is left out, and `show_volume: false` hides the volume when that lives on an amplifier or a remote.
 
+**It grows with the screen.** Upright, the card scales with its width. On a large wall tablet the cover, the buttons and the tiles get bigger, so you get fewer but larger covers per row instead of a small player with tiny covers. It stops growing at 1.6 times the normal size, from a card width of 1280 pixels.
+
 <img src="images/music-card-portrait.png" alt="The card on a tablet mounted on the wall in portrait" width="420">
 
-**On a phone too.** On a narrow card the player becomes a compact block: a small cover with the title beside it, and the buttons and volume below, so most of the screen is left for your music. With `fill: true` the card ends exactly at the bottom of the screen and the tiles scroll inside it.
+**On a phone too.** On a narrow card the player becomes a compact block: a small cover with the title beside it, and the buttons and volume below, so most of the screen is left for your music. The tiles go three in a row. This holds for every phone, also the wider ones of 412 pixels and up that most Android phones are. With `fill: true` the card ends exactly at the bottom of the screen and the tiles scroll inside it.
 
 <img src="images/music-card-phone.png" alt="The card on a phone" width="320">
 

@@ -701,31 +701,32 @@ ha-icon { pointer-events:none; }
 .wrap.staand .volrow > button.slider { width:100%; }
 .wrap.staand .volrow .vollbl { position:absolute; left:100%; top:50%; margin-left:6px;
                        transform:translateY(-50%); text-align:left; }
-/* A large upright screen, such as a wall tablet: everything grows with the
-   width instead of staying the size it has at 800 pixels. At 800 it is exactly
-   the block above; at 1280 and wider it is 1.6 times that. Fewer, bigger covers
-   per row, and the player block keeps its proportions. */
-@container (min-width: 800px) {
-  .wrap.staand { --cv:clamp(150px, 18.75cqw, 240px); --blok:clamp(480px, 60cqw, 768px);
-                 --tw:clamp(108px, 13.5cqw, 172px); }
+/* Upright screens scale with the width: a phone gets a compact player and
+   three covers per row, a wall tablet gets everything bigger. At 800 it is
+   exactly the block above; at 1280 and wider it is 1.6 times that. Below 800
+   it shrinks towards the phone sizes, so a 412 pixel phone no longer gets the
+   sizes of a tablet. */
+@container (min-width: 401px) {
+  .wrap.staand { --cv:clamp(84px, 18.75cqw, 240px); --blok:clamp(300px, 60cqw, 768px);
+                 --tw:clamp(80px, 13.5cqw, 172px); }
   .wrap.staand .left { max-width:calc(var(--blok) + 96px); }
   .wrap.staand .np { grid-template-columns:var(--cv) minmax(0,1fr);
-                     column-gap:clamp(24px, 3cqw, 38px); width:min(var(--blok), calc(100% - 96px)); }
+                     column-gap:clamp(14px, 3cqw, 38px); width:min(var(--blok), calc(100% - 96px)); }
   .wrap.staand .np .art, .wrap.staand .np .leegart { width:var(--cv); height:var(--cv); }
   .wrap.staand .np .glow { left:calc(var(--cv) / 2); width:calc(var(--cv) + 10px);
                      height:calc(var(--cv) + 10px); }
-  .wrap.staand .np .t { font-size:clamp(22px, 2.75cqw, 35px); }
-  .wrap.staand .np .a { font-size:clamp(15px, 1.875cqw, 24px); }
-  .wrap.staand .np .vtijd span { font-size:clamp(11.5px, 1.4375cqw, 18px); }
-  .wrap.staand .np .ctr button { width:clamp(48px, 6cqw, 77px); height:clamp(48px, 6cqw, 77px); }
-  .wrap.staand .np .ctr ha-icon { --mdc-icon-size:clamp(34px, 4.25cqw, 54px); }
+  .wrap.staand .np .t { font-size:clamp(16px, 2.75cqw, 35px); }
+  .wrap.staand .np .a { font-size:clamp(12.5px, 1.875cqw, 24px); }
+  .wrap.staand .np .vtijd span { font-size:clamp(10.5px, 1.4375cqw, 18px); }
+  .wrap.staand .np .ctr button { width:clamp(40px, 6cqw, 77px); height:clamp(40px, 6cqw, 77px); }
+  .wrap.staand .np .ctr ha-icon { --mdc-icon-size:clamp(24px, 4.25cqw, 54px); }
   .wrap.staand .np .ctr button.shuf ha-icon, .wrap.staand .np .ctr button.rep ha-icon {
-                     --mdc-icon-size:clamp(28px, 3.5cqw, 45px); }
-  .wrap.staand .np .ctr button.hoofd { width:clamp(68px, 8.5cqw, 109px); height:clamp(68px, 8.5cqw, 109px); }
-  .wrap.staand .np .ctr button.hoofd ha-icon { --mdc-icon-size:clamp(36px, 4.5cqw, 58px); }
-  .wrap.staand .chips button { height:clamp(36px, 4.5cqw, 58px); font-size:clamp(13.5px, 1.6875cqw, 21px); }
+                     --mdc-icon-size:clamp(20px, 3.5cqw, 45px); }
+  .wrap.staand .np .ctr button.hoofd { width:clamp(52px, 8.5cqw, 109px); height:clamp(52px, 8.5cqw, 109px); }
+  .wrap.staand .np .ctr button.hoofd ha-icon { --mdc-icon-size:clamp(28px, 4.5cqw, 58px); }
+  .wrap.staand .chips button { height:clamp(34px, 4.5cqw, 58px); font-size:clamp(13px, 1.6875cqw, 21px); }
   .wrap.staand .tiles { grid-template-columns:repeat(auto-fill,minmax(calc(var(--tw) + 22px),1fr)); }
-  .wrap.staand .tile span { font-size:clamp(11.5px, 1.4375cqw, 18px); }
+  .wrap.staand .tile span { font-size:clamp(11px, 1.4375cqw, 18px); }
   /* The columns beside the progress bar and the volume slider grow together,
      so both bars keep starting and ending at the same place. */
   .wrap.staand .np .voort, .wrap.staand .volrow {
@@ -733,9 +734,9 @@ ha-icon { pointer-events:none; }
   .wrap.staand .np .voort { width:calc(100% + 2 * (clamp(36px, 4.5cqw, 58px) + 12px));
                      margin:0 calc(-1 * (clamp(36px, 4.5cqw, 58px) + 12px)); }
   .wrap.staand .left { max-width:calc(var(--blok) + 2 * (clamp(36px, 4.5cqw, 58px) + 12px)); }
-  .wrap.staand .volrow > button.vk { width:clamp(30px, 3.75cqw, 48px); height:clamp(30px, 3.75cqw, 48px); }
-  .wrap.staand .volrow ha-icon { --mdc-icon-size:clamp(21px, 2.625cqw, 34px); }
-  .wrap.staand .volrow .vollbl { font-size:clamp(12px, 1.5cqw, 19px); }
+  .wrap.staand .volrow > button.vk { width:clamp(28px, 3.75cqw, 48px); height:clamp(28px, 3.75cqw, 48px); }
+  .wrap.staand .volrow ha-icon { --mdc-icon-size:clamp(19px, 2.625cqw, 34px); }
+  .wrap.staand .volrow .vollbl { font-size:clamp(11.5px, 1.5cqw, 19px); }
 }
 @container (max-width: 700px) {
   .wrap.staand .volrow { grid-template-columns:36px minmax(0,1fr) 36px auto; }
@@ -770,6 +771,10 @@ ha-icon { pointer-events:none; }
   .np .ctr button.hoofd { width:52px; height:52px; }
   .np .ctr button.hoofd ha-icon { --mdc-icon-size:28px; }
   .volrow { margin-top:8px; }
+  /* Three smaller covers per row instead of two big ones. */
+  .wrap { --tw:78px; }
+  .tiles { grid-template-columns:repeat(auto-fill,minmax(86px,1fr)); gap:10px 8px; }
+  .tile span { font-size:11px; }
   #melding:empty { min-height:0; padding:0; }
   /* Narrow, standing and filling the screen: the card is exactly as high as
      the screen below it, and the tiles get what the player leaves over. */
@@ -1714,8 +1719,10 @@ class MusicAssistantTouchCard extends HTMLElement {
     const kolommen = (getComputedStyle(vak).gridTemplateColumns || '').split(' ')
       .filter(Boolean).length || 4;
     if (Math.ceil(vak.children.length / kolommen) > 3) return;
-    let tw = 108;
-    while (tw > 78 && vak.scrollHeight > vak.clientHeight + 1) {
+    const eerste = vak.querySelector('img, .ph, .ic');
+    let tw = Math.round(eerste ? eerste.getBoundingClientRect().width : 108);
+    const ondergrens = Math.min(78, tw - 16);
+    while (tw > ondergrens && vak.scrollHeight > vak.clientHeight + 1) {
       tw -= 4;
       vak.style.setProperty('--tw', tw + 'px');
     }
